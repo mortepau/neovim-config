@@ -1,103 +1,87 @@
-local system = require('system')
+local git_username = 'mortepau'
+local ps = jit.os == 'Windows' and '\\' or '/'
+local plugin_dir = vim.fn.expand('$HOME') .. ps .. 'plugins'
 
-local Plugins = {
+local function dir_or_git(name)
+  local dir = plugin_dir .. ps .. name
+  if vim.fn.isdirectory(dir) == 1 then
+    return dir
+  end
+  return git_username .. '/' .. name
+end
+
+local plugins = {
   -- Package manager
   {
-    name = 'wbthomason/packer.nvim',
+    'wbthomason/packer.nvim',
     opt = true
   },
 
-  -- Local
+  -- Personal plugins
   {
-    name = 'vim-todo',
-    local_plugin = true,
-    config = function()
-      vim.g.todo_enable_partial_completion = 0
-    end
+    dir_or_git('vim-todo'),
+    config = function() require('mortepau.plugins.todo') end
   },
   {
-    name = 'vim-phoenix',
-    local_plugin = true,
-    ft = { 'elixir', 'eelixir' },
-    disable = system.at_work
+    dir_or_git('vim-phoenix'),
+    config = function() require('mortepau.plugins.phoenix') end
   },
-  { 
-    name = 'vim-duokey',
-    local_plugin = true,
+  {
+    dir_or_git('vim-duokey'),
+    config = function() require('mortepau.plugins.duokey') end,
     disable = true
   },
 
   -- LSP
+  { 'neovim/nvim-lspconfig', },
   {
-    name = 'neovim/nvim-lspconfig',
-    opt = true
-  },
-  {
-    name = 'RishabhRD/nvim-lsputils',
-    opt = true,
+    'RishabhRD/nvim-lsputils',
     requires = { 'RishabhRD/popfix' }
   },
-  {
-    name = 'tjdevries/nlua.nvim',
-    opt = true
-  },
+  { 'tjdevries/nlua.nvim' },
 
-  -- Completion
+  -- Autocompletion
   {
-    name = 'nvim-lua/completion-nvim',
-    opt = true,
+    'nvim-lua/completion-nvim',
     requires = { 'hrsh7th/vim-vsnip', 'hrsh7th/vim-vsnip-integ' }
   },
   {
-    name = 'sirver/ultisnips',
-    opt = true,
-    requires = { 'honza/vim-snippets' },
+    'sirver/ultisnips',
+    requires = { 'honza/vim-snippets' }
+  },
+
+  -- Treesitter
+  { 'nvim-treesitter/nvim-treesitter' },
+
+  -- Searching
+  -- TODO (mortepau): Create something simple yourself to reduce dependencies
+  {
+    'tjdevries/fold_search.vim',
+    requires = { 'tjdevries/standard.vim', 'tjdevries/conf.vim' },
+    keys = { { 'n', 'zz' } }
   },
 
   -- Statusline
   {
-    name = 'tjdevries/express_line.nvim',
-    opt = true
-  },
-  {
-    name = 'itchyny/lightline.vim',
-    opt = true,
+    'itchyny/lightline.vim',
     requires = { 'shinchu/lightline-gruvbox.vim' }
   },
 
-  -- Treesitter
-  {
-    name = 'nvim-treesitter/nvim-treesitter',
-    disable = system.at_work
-  },
-
-  -- Searching
-  {
-    name = 'tjdevries/fold_search.vim',
-    requires = { 'tjdevries/standard.vim', 'tjdevries/conf.vim' },
-    keys = {
-      { 'n', 'zz' }
-    }
-  },
-
   -- Project
+  { 'tpope/vim-eunuch' },
+  { 'tpope/vim-obsession' },
+  { 'tpope/vim-projectionist' },
   {
-    name = 'tpope/vim-eunuch',
-  },
-  {
-    name = 'tpope/vim-obsession',
-  },
-  {
-    name = 'tpope/vim-projectionist',
-  },
-  {
-    name = 'kkomen/vim-doge',
+    'kkomen/vim-doge',
     run = ':call doge#install()',
     cmd = { 'DogeGenerate' }
   },
   {
-    name = 'janko/vim-test',
-    requires = { 'tpope/vim-dispatch' },
+    'janko/vim-test',
+    requires = {
+      'tpope/vim-dispatch',
+      config = function() require('mortepau.plugins.dispatch') end
+    },
     cmd = {
       'TestNearest',
       'TestFile',
@@ -105,43 +89,22 @@ local Plugins = {
       'TestLast',
       'TestVisit'
     },
-    config = function()
-      vim.g['test#strategy'] = 'dispatch'
-    end
+    config = function() require('mortepau.plugins.test') end
   },
   {
-    name = 'rafcamlet/nvim-luapad',
-    cmd = {
-      'Luapad',
-      'LuaRun',
-      'Lua'
-    },
-    disable = system.at_work
+    'rafcamlet/nvim-luapad',
+    cmd = { 'Luapad', 'Luarun', 'Lua' }
   },
 
   -- Movement
+  { 'tpope/vim-unimpaired' },
   {
-    name = 'yaronkh/vim-winmanip',
+    'junegunn/vim-easy-align',
+    keys = { { 'n', 'ga' }, { 'x', 'ga' } },
+    config = function() require('mortepau.plugins.easy_align') end
   },
   {
-    name = 'tpope/vim-unimpaired',
-  },
-  {
-    name = 'junegunn/vim-easy-align',
-    keys = {
-      { 'n', 'ga' },
-      { 'x', 'ga' }
-    },
-    config = function()
-      local map = require('utils.map')
-      map({
-        { 'n', 'ga', '<Plug>(EasyAlign)', {} },
-        { 'x', 'ga', '<Plug>(EasyAlign)', {} }
-      })
-    end
-  },
-  {
-    name = 'tpope/vim-commentary',
+    'tpope/vim-commentary',
     cmd = { 'Commentary' },
     keys = {
       { 'n', 'gc' },
@@ -149,32 +112,28 @@ local Plugins = {
       { 'o', 'gc' },
       { 'n', 'gcc' },
       { 'n', 'cgc' },
-      { 'n', 'cgu' }
+      { 'n', 'cgu' },
     }
   },
   {
-    name = 'tommcdo/vim-exchange',
+    'tommcdo/vim-exchange',
     keys = {
       { 'n', 'cx' },
       { 'n', 'cxc' },
       { 'n', 'cxx' },
-      { 'x', 'X' }
+      { 'x', 'X' },
     }
   },
   {
-    name = 'tpope/vim-repeat',
-    keys = { 
-      { 'n', '.' },
-    }
+    'tpope/vim-repeat',
+    keys = { { 'n', '.' } }
   },
   {
-    name = 'tpope/vim-abolish',
-    keys = {
-      { 'n', 'cr' }
-    }
+    'tpope/vim-abolish',
+    keys = { { 'n', 'cr' } }
   },
   {
-    name = 'tpope/vim-surround',
+    'tpope/vim-surround',
     keys = {
       { 'n', 'ds' },
       { 'n', 'cs' },
@@ -192,140 +151,64 @@ local Plugins = {
     }
   },
   {
-    name = 'unblevable/quick-scope',
-    config = function()
-      -- TODO: Make this work properly, errors on some lines when enabled
-      vim.g.qs_highlight_on_keys = { 'f', 'F', 't', 'T' }
-      vim.g.qs_enable = 0
-    end
+    'unblevable/quick-scope',
+    config = function() require('mortepau.plugins.quick_scope') end
   },
   {
-    name = 'wellle/targets.vim',
-    config = function()
-      vim.g.targets_nl = { 'n', 'N' }
-    end
+    'wellle/targets.vim',
+    config = function() require('mortepau.plugins.targets') end
   },
 
   -- Visual
-  -- TODO: Add keys++
+  { 'chrisbra/unicode.vim' },
+  { 'junegunn/vim-peekaboo' },
   {
-    name = 'chrisbra/unicode.vim',
+    'kshenoy/vim-signature',
+    config = function() require('mortepau.plugins.signature') end
   },
   {
-    name = 'junegunn/vim-peekaboo',
+    'tweekmonster/braceless.vim',
+    config = function() require('mortepau.plugins.braceless') end
   },
   {
-    name = 'kshenoy/vim-signature',
-    config = function()
-      vim.g.SignatureMarkTextHL = 'SignColumn'
-    end
+    'tjdevries/overlength.vim',
+    config = function() require('mortepau.plugins.overlength') end
+  },
+  { 'markonm/traces.vim' },
+  -- TODO (mortepau): Yggdroot/indentline to vim-blankline or something
+  {
+    'norcally/nvim-colorizer.lua',
+    config = function() require('mortepau.plugins.colorizer') end
   },
   {
-    name = 'tweekmonster/braceless.vim',
-    config = function()
-      local autocmd = require('utils.autocmd')
-      autocmd({
-        Braceless = { event = 'FileType', pat = 'python', cmd = 'BracelessEnable +indent +fold +highlight' }
-      })
-    end
+    'christoomey/vim-sort-motion',
+    keys = { { 'n', 'gs' }, { 'n', 'gss' } }
   },
   {
-    name = 'tjdevries/overlength.vim',
-    config = function()
-      vim.g['overlength#highlight_to_end_of_line'] = 0
-    end
-  },
-  {
-    name = 'Yggdroot/indentLine',
-    config = function()
-      vim.g.indentLine_setConceal = 0
-      vim.g.indentLine_fileTypeExclude = { 'todo', 'text' }
-      vim.g.indentLine_bufTypeExclude = { 'help' }
-      vim.g.indentLine_enabled = 0
-    end
-  },
-  {
-    name = 'norcally/nvim-colorizer.lua',
-    config = function()
-      if vim.o.termguicolors == 1 then
-        require('colorizer').setup()
-      end
-    end
-  },
-  {
-    name = 'markonm/traces.vim',
-  },
-  {
-    name = 'christoomey/vim-sort-motion',
-    keys = {
-      { 'n', 'gs' },
-      { 'n', 'gss' }
-    }
-  },
-  {
-    name = 'godlygeek/tabular',
+    'godlygeek/tabular',
     cmd = { 'Tabularize' }
   },
 
   -- Git
   {
-    name = 'tpope/vim-fugitive',
+    'tpope/vim-fugitive',
     requires = { 'tpope/vim-rhubarb' }
   },
+  -- TODO (mortepau): gitsigns lua
   {
-    name = 'airblade/vim-gitgutter',
-    config = function()
-      local map = require('utils.map')
-      vim.g.gitgutter_max_signs = 500
-
-      map({
-        { 'n', ']h', '<Plug>(GitGutterNextHunk)', {}},
-        { 'n', '[h', '<Plug>(GitGutterPrevHunk)', {}},
-        { 'n', '<leader>hl', '<Plug>(GitGutterLineHighlightsToggle)', {}},
-        { 'n', '<leader>hs', '<Plug>(GitGutterStageHunk)', {}},
-        { 'n', '<leader>hu', '<Plug>(GitGutterUndoHunk)', {}},
-        { 'n', '<leader>hp', '<Plug>(GitGutterPreviewHunk)', {}},
-        { 'n', '<leader>hf', '<Plug>(GitGutterFold)', {}},
-      })
-    end
-  },
-  {
-    name = 'rhysd/git-messenger.vim',
+    'rhysd/git-messenger.vim',
     cmd = { 'GitMessenger' },
-    keys = { 
-      { 'n', '<leader>gm' } 
-    }
+    keys = { { 'n', '<leader>gm' } }
   },
 
-  -- File browsing
+  -- Filebrowsing
   {
-    name = 'nvim-lua/telescope.nvim',
+    'nvim-lua/telescope.nvim',
     requires = { 'nvim-lua/plenary.nvim', 'nvim-lua/popup.nvim' },
-    config = function()
-      local map = require('utils.map')
-      map({
-        -- General mappings
-        { 'n', '<leader>fs', '<cmd>Telescope live_grep<CR>', { noremap = true }},
-        { 'n', '<leader>ff', '<cmd>Telescope find_files<CR>', { noremap = true }},
-        { 'n', '<leader>fF', '<cmd>Telescope git_files<CR>', { noremap = true }},
-        { 'n', '<leader>fb', '<cmd>Telescope buffers<CR>', { noremap = true }},
-        { 'n', '<leader>fm', '<cmd>Telescope marks<CR>', { noremap = true }},
-        { 'n', '<leader>fq', '<cmd>Telescope quickfix<CR>', { noremap = true }},
-        { 'n', '<leader>fl', '<cmd>Telescope loclist<CR>', { noremap = true }},
-        { 'n', '<leader>fh', '<cmd>Telescope help_tags<CR>', { noremap = true }},
-        { 'n', '<leader>fH', '<cmd>Telescope highlights<CR>', { noremap = true }},
-        { 'n', '<leader>fk', '<cmd>Telescope keymaps<CR>', { noremap = true }},
-        -- Git mappings
-        { 'n', '<leader>fgC', '<cmd>Telescope git_commits<CR>', { noremap = true }},
-        { 'n', '<leader>fgc', '<cmd>Telescope git_bcommits<CR>', { noremap = true }},
-        { 'n', '<leader>fgs', '<cmd>Telescope git_status<CR>', { noremap = true }},
-        { 'n', '<leader>fgb', '<cmd>Telescope git_branches<CR>', { noremap = true }},
-        -- LSP mappings
-      })
-    end
+    config = function() require('mortepau.plugins.telescope') end
   },
   {
-    name = 'kyazdani42/nvim-tree.lua',
+    'kyazdani42/nvim-tree.lua',
     cmd = {
       'NvimTreeToggle',
       'NvimTreeOpen',
@@ -333,232 +216,73 @@ local Plugins = {
       'NvimTreeRefresh',
       'NvimTreeFindFile'
     },
-    keys = {
-      { 'n', '<leader>nn' }
-    },
+    keys = { { 'n', '<leader>ft' } },
     requires = { 'kyazdani42/nvim-web-devicons' },
-    config = function()
-      local map = require('utils.map')
-      map({
-        { 'n', '<leader>nn', '<cmd>NvimTreeToggle<CR>', { noremap = true } }
-      })
-      vim.g.nvim_tree_quit_on_open = 1
-      require('nvim-tree').refresh()
-    end
+    config = function() require('mortepau.plugins.nvim_tree') end
   },
 
-  -- Filetype
+  -- Filetype specific
+
   -- Lua
-  {
-    name = 'tjdevries/manillua.nvim',
-  },
-  {
-    name = 'euclidianAce/BetterLua.vim',
-  },
+  { 'tjdevries/manillua.nvim' },
+  { 'euclidianAce/BetterLua.vim' },
 
   -- Markdown
   {
-    name = 'plasticboy/vim-markdown',
-    config = function()
-      vim.g.vim_markdown_follow_anchor = 1
-      vim.g.vim_markdown_auto_insert_bullets = 1
-    end
+    'plasticboy/vim-markdown',
+    config = function() require('mortepau.plugins.vim_markdown') end
   },
   {
-    name = 'iamcco/markdown-preview.nvim',
+    'iamcco/markdown-preview.nvim',
     cmd = { 'MarkdownPreview' },
     run = ':call mkdp#util#install()',
-    config = function()
-      vim.g.mkdp_auto_close = 0
-      vim.g.mkdp_refresh_slow = 1
-      vim.g.mkdp_browser = 'safari'
-      vim.g.mkdp_markdown_css = '~/.local/lib/node_modules/github-markdown-css/github-markdown-css'
-    end
+    config = function() require('mortepau.plugins.markdown_preview') end
   },
 
-  -- C families
+  -- C, C++
   {
-    name = 'bfrg/vim-cpp-modern',
-    config = function()
-      vim.g.cpp_no_function_highlight = 0
-      vim.g.cpp_attributes_highlight = 1
-      vim.g.cpp_member_highlight = 1
-      vim.g.cpp_simple_highlight = 0
-    end
+    'bfrg/vim-cpp-modern',
+    config = function() require('mortepau.plugins.cpp_modern') end
   },
 
-  -- HDL
+  -- Verilog, SystemVerilog
   {
-    name = 'vhda/verilog_systemverilog.vim',
-    config = function()
-      local autocmd = require('utils.autocmd')
-      autocmd({
-        SystemVerilogBindings = {
-          {
-            event = 'FileType',
-            pat = { 'verilog', 'systemverilog', 'verilog_systemverilog' },
-            cmd = 'nnoremap <buffer> <leader>i :VerilogFollowInstance<CR>' 
-          },
-          {
-            event = 'FileType',
-            pat = { 'verilog', 'systemverilog', 'verilog_systemverilog' },
-            cmd = 'nnoremap <buffer> <leader>I :VerilogFollowPort<CR>' 
-          },
-          {
-            event = 'FileType',
-            pat = { 'verilog', 'systemverilog', 'verilog_systemverilog' },
-            cmd = 'nnoremap <buffer> <leader>u :VerilogGotoInstanceStart<CR>' 
-          },
-        }})
-    end,
-    disable = not system.at_work
+    'vhda/verilog_systemverilog.vim',
+    config = function() require('mortepau.plugins.verilog_systemverilog') end
   },
 
-  -- Latex
+  -- LaTex
   {
-    name = 'lervag/vimtex',
-    requires = { 'KeitaNakamura/tex-conceal.vim' },
-    config = function()
-      vim.g.vimtex_view_method = 'zathura'
-      vim.g.vimtex_quickfix_mode = 0
-      vim.g.vimtex_compiler_progname = 'nvr'
-      vim.g.vimtex_compiler_latexmk = { build_dir = './build' }
-    end,
-    disable = system.at_work
+    'lervag/vimtex',
+    requires = {
+      'KeitaNakamura/tex-conceal.vim',
+      config = function() require('mortepau.plugins.tex_conceal') end
+    },
+    config = function() require('mortepau.plugins.vimtex') end
   },
 
   -- Elixir
-  {
-    name = 'elixir-editors/vim-elixir',
-    disable = system.at_work
-  },
+  { 'elixir-editors/vim-elixir' },
 
-  -- Matlab
-  {
-    name = 'daeyun/vim-matlab',
-    run = ':UpdateRemotePlugins'
-  },
+  -- MATLAB
+  -- TODO (mortepau): Create plugin for MATLAB not dependent on Python2
+  { 'daeyun/vim-matlab' },
 
   -- Colorschemes
-  { 
-    name = 'morhetz/gruvbox',
+  {
+    'morhetz/gruvbox',
     opt = true,
-    config = function()
-      vim.g.gruvbox_improved_strings = 0
-      vim.g.gruvbox_italic = 1
-    end
+    config = function() require('mortepau.plugins.gruvbox') end
   },
   {
-    name = 'lifepillar/vim-gruvbox8',
+    'lifepillar/vim-gruvbox8',
     opt = true,
-    config = function()
-      vim.g.gruvbox_italics = 1
-      vim.g.gruvbox_filetype_hi_groups = 1
-      vim.g.gruvbox_plugin_hi_groups = 1
-    end
+    config = function() require('mortepau.plugins.gruvbox8') end
   },
-  {
-    name = 'jsit/toast.vim',
-    opt = true
-  },
-  {
-    name = 'cocopon/iceberg.vim',
-    opt = true
-  },
-  {
-    name = 'bluz71/vim-moonfly-colors',
-    opt = true
-  },
-  {
-    name = 'bluz71/vim-nightfly-guicolors',
-    opt = true
-  },
-
-  -- Tmux
-  {
-    name = 'tmux-plugins/vim-tmux-focus-events',
-    disable = not system.has_tmux
-  },
-  {
-    name = 'christoomey/vim-tmux-navigator',
-    keys = {
-      { 'n', '<C-h>' },
-      { 'n', '<C-j>' },
-      { 'n', '<C-k>' },
-      { 'n', '<C-l>' }
-    },
-    disable = not system.has_tmux
-  },
-  {
-    name = 'tmux-plugins/vim-tmux',
-    ft = { 'tmux' },
-    disable = not system.has_tmux
-  },
-
-  -- Required plugins
-  {
-    name = 'RishabhRD/popfix',
-    required = true,
-  },
-  {
-    name = 'hrsh7th/vim-vsnip',
-    required = true,
-    opt = true
-  },
-  {
-    name = 'hrsh7th/vim-vsnip-integ',
-    required = true,
-    opt = true
-  },
-  {
-    name = 'honza/vim-snippets',
-    required = true
-  },
-  {
-    name = 'shinchu/lightline-gruvbox.vim',
-    required = true
-  },
-  {
-    name = 'tjdevries/standard.vim',
-    required = true
-  },
-  {
-    name = 'tjdevries/conf.vim',
-    required = true
-  },
-  {
-    name = 'tpope/vim-dispatch',
-    required = true,
-    config = function()
-      vim.g.dispatch_compilers = {
-        elixir = 'exunit'
-      }
-    end
-  },
-  {
-    name = 'tpope/vim-rhubarb',
-    required = true
-  },
-  {
-    name = 'nvim-lua/plenary.nvim',
-    required = true
-  },
-  {
-    name = 'nvim-lua/popup.nvim',
-    required = true
-  },
-  {
-    name = 'kyazdani42/nvim-web-devicons',
-    required = true,
-    disable = not system.has_nerdfont
-  },
-  {
-    name = 'KeitaNakamura/tex-conceal.vim',
-    required = true,
-    config = function()
-      vim.g.tex_conceal = 'abdmg'
-    end
-  },
+  { 'jsit/toast.vim', opt = true },
+  { 'cocopon/iceberg.vim', opt = true },
+  { 'bluz71/vim-moonfly-colors', opt = true },
+  { 'bluz71/vim-nightfly-guicolors', opt = true },
 }
 
-return Plugins
+mortepau.plugins = mortepau.plugins or plugins
