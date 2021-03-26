@@ -43,7 +43,10 @@ vim.nnoremap('<leader>hg', ':lua P(mortepau.syntax.stack())<Cr>')
 vim.nnoremap('<leader>hw', ':lua mortepau.syntax.highlight_whitespace()<Cr>')
 
 -- Clean excess whitespace
-vim.nnoremap('<leader>bw', ':lua mortepau.file.clean_whitespace()')
+vim.nnoremap('<leader>bw', ':lua mortepau.file.clean_whitespace()<Cr>', { silent = true })
+
+-- Source file based on filename
+vim.nnoremap('<leader>bl', ':lua mortepau.file.source("%")<Cr>', { silent = true })
 
 -- Quickfix commands
 vim.nnoremap('<leader>qt', ':lua mortepau.quickfix.toggle()<Cr>', { silent = true })
