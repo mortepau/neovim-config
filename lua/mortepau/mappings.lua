@@ -1,8 +1,9 @@
 -- Source my rc-file (init.lua or init.vim)
 vim.nnoremap('<leader>e', 'luaeval("mortepau.file.source(_A)", $MYVIMRC)')
 
--- Save
-vim.nnoremap('<leader>w', ':write!<Cr>')
+-- Conditional save and force save
+vim.nnoremap('<leader>w', ':if &modified | write! | endif<Cr>', { silent = true })
+vim.nnoremap('<leader>W', ':write!<Cr>')
 
 -- Rebind redo
 vim.nnoremap('<S-u>', '<C-r>')
