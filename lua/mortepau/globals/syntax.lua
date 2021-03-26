@@ -72,9 +72,11 @@ end
 
 function mortepau.syntax.highlight_whitespace()
   local group_name = 'HighlightWhitespace'
-  if vim.fn.exists('#' .. group_name) then
-    vim.cmd('augroup! ' .. group_name)
+  if vim.fn.exists('#' .. group_name) == 1 then
+    print('Highlighting whitespace disabled')
+    vim.augroup(group_name, {})
   else
+    print('Highlighting whitespace enabled')
     vim.augroup(group_name, {
       { 'InsertEnter', '*', 'match ErrorMsg /\\s\\+\\%#\\@<!$/', { buffer = 0 } },
       { 'InsertLeave', '*', 'match ErrorMsg /\\s\\+$/', { buffer = 0 } },
