@@ -21,8 +21,10 @@ vim.vnoremap('<', '<gv')
 vim.vnoremap('>', '>gv')
 
 -- Move lines
-vim.vnoremap('<M-j>', ':m\'>+<Cr>`<my`>mzgv`yo´z')
-vim.vnoremap('<M-k>', ':m\'<-2<Cr>`>my`<mzgv`yo`z')
+vim.nnoremap('<M-j>', 'mz:m+<Cr>`z', { silent = true })
+vim.nnoremap('<M-k>', 'mz:m-2<Cr>`z', { silent = true })
+vim.vnoremap('<M-j>', ':m\'>+<Cr>`<my`>mzgv`yo`z', { silent = true })
+vim.vnoremap('<M-k>', ':m\'<-2<Cr>`>my`<mzgv`yo`z', { silent = true })
 
 -- Rebind [, ], {, and } for easier access
 vim.map('ø', '[')
