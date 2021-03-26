@@ -1,6 +1,7 @@
 mortepau.file = mortepau.file or {}
 
 function mortepau.file.source(filename)
+  if filename:sub(1) == '%' then filename = vim.fn.expand(filename) end
   local is_lua = not not string.find(filename, '.lua$')
   local is_vim = not not string.find(filename, '.vim$')
 
