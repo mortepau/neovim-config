@@ -292,3 +292,4 @@ local plugins = {
 }
 
 mortepau.plugins = mortepau.plugins or plugins
+mortepau.plugin_func = mortepau.plugin_func or {}

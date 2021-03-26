@@ -1,22 +1,34 @@
-local normal = mortepau.syntax.get_highlight('Normal')
-local diffadd = mortepau.syntax.get_highlight('DiffAdd')
-diffadd.attribute.inverse = nil
-diffadd.color.guibg = normal.guibg
-diffadd.color.ctermbg = normal.ctermbg
+-- Update the highlight groups GitSignsAdd, GitSignsDelete, and GitSignsChange
+mortepau.plugin_func.define_gitsign_highlights = function()
+  local base = mortepau.syntax.get_highlight('SignColumn')
+  if not base.color.guibg or not base.color.ctermbg then
+    base = mortepau.syntax.get_highlight('Normal')
+  end
 
-local diffdelete = mortepau.syntax.get_highlight('DiffDelete')
-diffdelete.attribute.inverse = nil
-diffdelete.color.guibg = normal.guibg
-diffdelete.color.ctermbg = normal.ctermbg
+  local diffadd = mortepau.syntax.get_highlight('DiffAdd')
+  diffadd.attribute.inverse = nil
+  diffadd.color.guibg = base.color.guibg
+  diffadd.color.ctermbg = base.color.ctermbg
 
-local diffchange = mortepau.syntax.get_highlight('DiffChange')
-diffchange.attribute.inverse = nil
-diffchange.color.guibg = normal.guibg
-diffchange.color.ctermbg = normal.ctermbg
+  local diffdelete = mortepau.syntax.get_highlight('DiffDelete')
+  diffdelete.attribute.inverse = nil
+  diffdelete.color.guibg = base.color.guibg
+  diffdelete.color.ctermbg = base.color.ctermbg
 
-vim.cmd('highlight ' .. mortepau.syntax.format_highlight('GitSignsAdd', diffadd))
-vim.cmd('highlight ' .. mortepau.syntax.format_highlight('GitSignsDelete', diffdelete))
-vim.cmd('highlight ' .. mortepau.syntax.format_highlight('GitSignsChange', diffchange))
+  local diffchange = mortepau.syntax.get_highlight('DiffChange')
+  diffchange.attribute.inverse = nil
+  diffchange.color.guibg = base.color.guibg
+  diffchange.color.ctermbg = base.color.ctermbg
+
+  vim.cmd('highlight ' .. mortepau.syntax.format_highlight('GitSignsAdd', diffadd))
+  vim.cmd('highlight ' .. mortepau.syntax.format_highlight('GitSignsDelete', diffdelete))
+  vim.cmd('highlight ' .. mortepau.syntax.format_highlight('GitSignsChange', diffchange))
+end
+mortepau.plugin_func.define_gitsign_highlights()
+
+vim.augroup('GitSignsColors', {
+  { 'Colorscheme', '*', 'lua mortepau.plugin_func.define_gitsign_highlights()' }
+})
 
 
 require('gitsigns').setup({
