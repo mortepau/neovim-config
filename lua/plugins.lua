@@ -192,7 +192,13 @@ local plugins = {
   -- Git
   {
     'tpope/vim-fugitive',
-    requires = { 'tpope/vim-rhubarb' }
+    requires = { 'tpope/vim-rhubarb' },
+    config = function() require('mortepau.plugins.fugitive') end
+  },
+  {
+    'lewis6991/gitsigns.nvim',
+    requires = { 'nvim-lua/plenary.nvim' },
+    config = function() require('mortepau.plugins.gitsigns') end
   },
   -- TODO (mortepau): gitsigns lua
   {
