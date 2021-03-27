@@ -32,6 +32,12 @@ function mortepau.buftype.configure_help(buf)
   -- Set local options
   vim.setlocal('number', true)
   vim.setlocal('relativenumber', false)
+
+  -- Add augroup
+  vim.augroup('HelpCursorLine', {
+    { 'BufEnter', buf, 'setlocal cursorline' },
+    { 'BufLeave', buf, 'setlocal nocursorline' },
+  })
 end
 
 function mortepau.buftype.configure_quickfix(buf)
