@@ -42,13 +42,17 @@ local plugins = {
 
   -- Autocompletion
   {
-    'nvim-lua/completion-nvim',
-    requires = { 'hrsh7th/vim-vsnip', 'hrsh7th/vim-vsnip-integ' }
+    'hrsh7th/nvim-compe',
+    config = function() require('mortepau.plugins.nvim_compe') end
   },
   {
-    'sirver/ultisnips',
-    requires = { 'honza/vim-snippets' }
+    'hrsh7th/vim-vsnip',
+    config = function() require('mortepau.plugins.vsnip') end
   },
+  -- {
+  --   'sirver/ultisnips',
+  --   requires = { 'honza/vim-snippets' }
+  -- },
 
   -- Treesitter
   { 'nvim-treesitter/nvim-treesitter' },
@@ -62,10 +66,10 @@ local plugins = {
   },
 
   -- Statusline
-  {
-    'itchyny/lightline.vim',
-    requires = { 'shinchu/lightline-gruvbox.vim' }
-  },
+  -- {
+  --   'itchyny/lightline.vim',
+  --   requires = { 'shinchu/lightline-gruvbox.vim' }
+  -- },
 
   -- Project
   { 'tpope/vim-eunuch' },
