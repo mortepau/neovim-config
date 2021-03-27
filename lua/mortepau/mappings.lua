@@ -45,12 +45,14 @@ vim.nnoremap('<leader>hg', ':lua P(mortepau.syntax.stack())<Cr>')
 vim.nnoremap('<leader>hw', ':lua mortepau.syntax.highlight_whitespace()<Cr>')
 
 -- Clean excess whitespace
-vim.nnoremap('<leader>bw', ':lua mortepau.file.clean_whitespace()<Cr>', { silent = true })
+vim.nnoremap('<leader>Fw', ':lua mortepau.file.clean_whitespace()<Cr>', { silent = true })
 
 -- Source file based on filename
-vim.nnoremap('<leader>bl', ':lua mortepau.file.source("%")<Cr>', { silent = true })
+vim.nnoremap('<leader>Fs', ':lua mortepau.file.source("%")<Cr>', { silent = true })
 
 -- Quickfix commands
 vim.nnoremap('<leader>qt', ':lua mortepau.quickfix.toggle()<Cr>', { silent = true })
 vim.nnoremap('<leader>qe', ':lua mortepau.quickfix.empty()<Cr>', { silent = true })
 vim.nnoremap('<leader>qd', ':lua mortepau.quickfix.diagnostics()<Cr>', { silent = true })
+vim.nnoremap('<leader>qn', ':cnext<Cr>', { silent = true })
+vim.nnoremap('<leader>qN', ':cnext<Cr>', { silent = true })
