@@ -7,8 +7,10 @@ function mortepau.file.source(filename)
 
   if is_lua then
     vim.cmd('luafile ' .. filename)
+    print('Sourced ' .. filename)
   elseif is_vim then
     vim.cmd('source ' .. filename)
+    print('Sourced ' .. filename)
   end
 end
 
