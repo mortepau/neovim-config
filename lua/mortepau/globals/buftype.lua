@@ -22,8 +22,11 @@ end
 
 function mortepau.buftype.configure_help(buf)
   -- Position the window
-  local movement = vim.api.nvim_win_get_width(0) > 160 and 'L' or 'K'
-  vim.cmd('wincmd ' .. movement)
+  local help_displayed = pcall(vim.api.nvim_get_var, 'help_window_open')
+  if not help_displayed then
+    local movement = vim.api.nvim_win_get_width(0) > vim.api.nvim_get_option('columns') / 2 and 'L' or 'K'
+    vim.cmd('wincmd ' .. movement)
+  end
 
   -- Add keymaps
   vim.nnoremap('<Esc>', '<cmd>q<Cr>', { buffer = buf })
@@ -37,7 +40,9 @@ function mortepau.buftype.configure_help(buf)
   vim.augroup('HelpCursorLine', {
     { 'BufEnter', buf, 'setlocal cursorline' },
     { 'BufLeave', buf, 'setlocal nocursorline' },
+    { 'WinClosed', buf, 'unlet g:help_window_open' },
   })
+  vim.api.nvim_set_var('help_window_open', true)
 end
 
 function mortepau.buftype.configure_quickfix(buf)
