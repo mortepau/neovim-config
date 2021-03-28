@@ -40,7 +40,7 @@ vim.set('foldlevelstart', 99)
 vim.set('ignorecase', true)
 vim.set('smartcase', true)
 vim.set('incsearch', true)
-vim.set('hlsearch', true)
+vim.set('hlsearch', false)
 vim.set('magic', true)
 vim.set('inccommand','split')
 -- TODO: Set path
@@ -50,6 +50,7 @@ vim.set('path', '.,/usr/include,,~/.config/**')
 vim.set('wildmenu', true)
 vim.set('wildmode', 'longest,full')
 vim.set('wildignore', '*.o,*~,*.pyc,.git,.hg,.svn,*.out,*.jpg,*.png,*.jpeg,*.gif,*.DS_Store,**' .. ps .. 'node_modules' .. ps .. '**')
+vim.set('wildcharm', vim.fn.char2nr('')) -- Integer equivalent to <C-z>
 
 -- History
 vim.set('history', 500)

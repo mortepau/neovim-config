@@ -40,6 +40,9 @@ vim.map('ææ', ']]')
 vim.noremap('0', '^')
 vim.noremap('g0', '0')
 
+vim.cnoremap('<Tab>', 'getcmdtype() =~ "[/?]" ? "<C-g>" : "<C-z>"', { expr = true })
+vim.cnoremap('<S-Tab>', 'getcmdtype() =~ "[/?]" ? "<C-t>" : "<S-Tab>"', { expr = true })
+
 -- Show current syntax groups
 vim.nnoremap('<leader>hg', ':lua P(mortepau.syntax.stack())<Cr>')
 vim.nnoremap('<leader>hw', ':lua mortepau.syntax.highlight_whitespace()<Cr>')
