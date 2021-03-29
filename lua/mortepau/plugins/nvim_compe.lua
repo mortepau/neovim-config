@@ -36,7 +36,7 @@ function mortepau.plugin_func.snippet_available_forward()
 end
 
 function mortepau.plugin_func.snippet_available_backward()
-  return vim.fn.call('vsnip#available', {-1}) == 1
+  return vim.fn.call('vsnip#jumpable', {-1}) == 1
 end
 
 function mortepau.plugin_func.snippet_jump_next()
