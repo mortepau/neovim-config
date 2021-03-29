@@ -45,9 +45,6 @@ function M.init()
   -- Load the plugins
   mortepau.package_manager.use(mortepau.plugins)
 
-  -- Add all the plugins in the start directory to runtimepath and source them
-  vim.cmd('packloadall')
-
   -- Create commands to use the package manager
   local command_template = 'command! -nargs=0 %s lua mortepau.package_manager.%s()<Cr>'
   vim.cmd(string.format(command_template, 'PackerCompile', 'compile'))
