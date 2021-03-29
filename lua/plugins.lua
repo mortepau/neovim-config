@@ -47,12 +47,9 @@ local plugins = {
   },
   {
     'hrsh7th/vim-vsnip',
+    requires = { 'cstrap/python-snippets',  },
     config = function() require('mortepau.plugins.vsnip') end
   },
-  -- {
-  --   'sirver/ultisnips',
-  --   requires = { 'honza/vim-snippets' }
-  -- },
 
   -- Treesitter
   { 'nvim-treesitter/nvim-treesitter' },
@@ -64,12 +61,6 @@ local plugins = {
     requires = { 'tjdevries/standard.vim', 'tjdevries/conf.vim' },
     keys = { { 'n', 'zz' } }
   },
-
-  -- Statusline
-  -- {
-  --   'itchyny/lightline.vim',
-  --   requires = { 'shinchu/lightline-gruvbox.vim' }
-  -- },
 
   -- Project
   { 'tpope/vim-eunuch' },
@@ -192,6 +183,7 @@ local plugins = {
     'godlygeek/tabular',
     cmd = { 'Tabularize' }
   },
+  -- TODO (mortepau): moaqa/dial.nvim <C-a> and <C-x> enhancements
 
   -- Git
   {
