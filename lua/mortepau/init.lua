@@ -15,3 +15,6 @@ require('mortepau.autocmds')
 
 -- Load plugins
 require('mortepau.plugins').init()
+
+-- Load LSP configuration
+require('mortepau.lsp')
