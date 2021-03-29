@@ -24,10 +24,10 @@ vim.inoremap('<C-e>', 'compe#close("<C-e>")', silent_expr)
 vim.inoremap('<C-f>', 'compe#scroll({ "delta": +4 })', silent_expr)
 vim.inoremap('<C-d>', 'compe#scroll({ "delta": -4 })', silent_expr)
 
-vim.inoremap('<Tab>', 'v:lua.mortepau.editor.completion_next()', { expr = true })
-vim.snoremap('<Tab>', 'v:lua.mortepau.editor.completion_next()', { expr = true })
-vim.inoremap('<S-Tab>', 'v:lua.mortepau.editor.completion_prev()', { expr = true })
-vim.snoremap('<S-Tab>', 'v:lua.mortepau.editor.completion_prev()', { expr = true })
+vim.imap('<Tab>', 'v:lua.mortepau.editor.completion_next()', { expr = true })
+vim.smap('<Tab>', 'v:lua.mortepau.editor.completion_next()', { expr = true })
+vim.imap('<S-Tab>', 'v:lua.mortepau.editor.completion_prev()', { expr = true })
+vim.smap('<S-Tab>', 'v:lua.mortepau.editor.completion_prev()', { expr = true })
 
 -- Set the global functions used in the editor module for interacting with the
 -- autocomplete menu
