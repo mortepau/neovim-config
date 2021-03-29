@@ -11,13 +11,11 @@ require('compe').setup({
     nvim_lsp = true,
     nvim_lua = true,
     vsnip = true,
-    ultisnips = true,
   }
 })
 
 local silent_expr = { silent = true, expr = true }
 
--- TODO (mortepau): Check that this works and include snippet source etc.
 vim.inoremap('<C-Space>', 'compe#complete()', silent_expr)
 vim.inoremap('<Cr>', 'compe#confirm("<Cr>")', silent_expr)
 vim.inoremap('<C-e>', 'compe#close("<C-e>")', silent_expr)
