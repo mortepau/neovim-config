@@ -61,8 +61,8 @@ function mortepau.syntax.format_highlight(name, highlight)
     s = s .. prefix .. '=' .. table.concat(highlight.attribute, ',') .. ' '
   end
 
-  for name, color in pairs(highlight.color) do
-    s = s .. name .. '=' .. color .. ' '
+  for color_name, color in pairs(highlight.color) do
+    s = s .. color_name .. '=' .. color .. ' '
   end
 
   s = s:sub(1, -2)
