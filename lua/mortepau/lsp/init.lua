@@ -44,22 +44,22 @@ vim.cmd('highlight ' .. mortepau.syntax.format_highlight('LspDiagnosticsDefaultI
 vim.cmd('highlight ' .. mortepau.syntax.format_highlight('LspDiagnosticsDefaultHint', hint_group))
 
 -- Modify the signs shown in the column
-vim.fn.sign_define('LspDiagnosticsSignError', {
-  text = '', -- uf05e
-  texthl = 'LspDiagnosticsDefaultError',
-})
-vim.fn.sign_define('LspDiagnosticsSignWarning', {
-  text = '', -- uf071
-  texthl = 'LspDiagnosticsDefaultWarning',
-})
-vim.fn.sign_define('LspDiagnosticsSignInformation', {
-  text = '', -- uf12a
-  texthl = 'LspDiagnosticsDefaultInformation',
-})
-vim.fn.sign_define('LspDiagnosticsSignHint', {
-  text = '', -- uf00c
-  texthl = 'LspDiagnosticsDefaultHint',
-})
+-- vim.fn.sign_define('LspDiagnosticsSignError', {
+--   text = '', -- uf05e
+--   texthl = 'LspDiagnosticsDefaultError',
+-- })
+-- vim.fn.sign_define('LspDiagnosticsSignWarning', {
+--   text = '', -- uf071
+--   texthl = 'LspDiagnosticsDefaultWarning',
+-- })
+-- vim.fn.sign_define('LspDiagnosticsSignInformation', {
+--   text = '', -- uf12a
+--   texthl = 'LspDiagnosticsDefaultInformation',
+-- })
+-- vim.fn.sign_define('LspDiagnosticsSignHint', {
+--   text = '', -- uf00c
+--   texthl = 'LspDiagnosticsDefaultHint',
+-- })
 
 -- Attach function
 local on_attach = function(client, bufnr)
