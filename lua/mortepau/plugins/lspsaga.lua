@@ -1,0 +1,22 @@
+local saga = require('lspsaga')
+saga.init_lsp_saga({
+  code_action_keys = {
+    quit = { 'q', '<Esc>', '<C-e>', '<C-c>' },
+    exec = '<Cr>'
+  },
+  rename_action_keys = {
+    quit = { '<Esc>', '<C-e>', '<C-c>' },
+    exec = '<Cr>'
+  },
+  finder_action_keys = {
+    open = '<Cr>',
+    vsplit = 'v',
+    split = 's',
+    -- open = { 'o', '<Cr>' },
+    -- vsplit = { 'v', '<C-v>' },
+    -- split = { 's', '<C-s>' },
+    quit = { '<Esc>', 'q', '<C-c>', '<C-e>' },
+    scroll_down = '<C-j>',
+    scroll_up = '<C-k>'
+  }
+})

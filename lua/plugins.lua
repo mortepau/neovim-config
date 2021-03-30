@@ -33,12 +33,16 @@ local plugins = {
   },
 
   -- LSP
-  { 'neovim/nvim-lspconfig', },
+  { 'neovim/nvim-lspconfig' },
   {
-    'RishabhRD/nvim-lsputils',
-    requires = { 'RishabhRD/popfix' }
+    'glepnir/lspsaga.nvim',
+    config = function() require('mortepau.plugins.lspsaga') end
   },
-  { 'tjdevries/nlua.nvim' },
+  -- {
+  --   'RishabhRD/nvim-lsputils',
+  --   requires = { 'RishabhRD/popfix' }
+  -- },
+  -- { 'tjdevries/nlua.nvim' },
 
   -- Autocompletion
   {
