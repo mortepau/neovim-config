@@ -2,13 +2,14 @@ local lspconfig = require('lspconfig')
 
 -- Handlers
 vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
-  vim.lsp.diagnostic.on_publish_diagnostics, {
+  vim.lsp.diagnostic.on_publish_diagnostics,
+  {
     -- Enable signs
     signs = true,
     -- Disable virtual text
     virtual_text = false,
-    -- Disable underline diagnostics
-    underline = false,
+    -- Enable underline diagnostics
+    underline = true,
     -- Do not update in insert mode
     update_in_insert = false,
   }
@@ -31,54 +32,69 @@ local snippet_capabilities = {
 }
 
 -- Highlights
+
+-- Add highlight groups
+local error_group = { color = { guifg = '#fc514e' }, attribute = {} }
+local warning_group = { color = { guifg = '#e3d18a' }, attribute = {} }
+local information_group = { color = { guifg = '#c3ccdc' }, attribute = {} }
+local hint_group = { color = { guifg = '#82aaff' }, attribute = {} }
+vim.cmd('highlight ' .. mortepau.syntax.format_highlight('LspDiagnosticsDefaultError', error_group))
+vim.cmd('highlight ' .. mortepau.syntax.format_highlight('LspDiagnosticsDefaultWarning', warning_group))
+vim.cmd('highlight ' .. mortepau.syntax.format_highlight('LspDiagnosticsDefaultInformation', information_group))
+vim.cmd('highlight ' .. mortepau.syntax.format_highlight('LspDiagnosticsDefaultHint', hint_group))
+
 -- Modify the signs shown in the column
 vim.fn.sign_define('LspDiagnosticsSignError', {
   text = '', -- uf05e
   texthl = 'LspDiagnosticsDefaultError',
-  linehl = '',
-  numhl = ''
 })
 vim.fn.sign_define('LspDiagnosticsSignWarning', {
   text = '', -- uf071
   texthl = 'LspDiagnosticsDefaultWarning',
-  linehl = '',
-  numhl = ''
 })
 vim.fn.sign_define('LspDiagnosticsSignInformation', {
   text = '', -- uf12a
   texthl = 'LspDiagnosticsDefaultInformation',
-  linehl = '',
-  numhl = ''
 })
 vim.fn.sign_define('LspDiagnosticsSignHint', {
   text = '', -- uf00c
   texthl = 'LspDiagnosticsDefaultHint',
-  linehl = '',
-  numhl = ''
 })
 
 -- Attach function
-local on_attach = function(client)
+local on_attach = function(client, bufnr)
   -- Find the server's capabilities
   local capabilities = client.resolved_capabilities
 
-  local bufsilent = { silent = true, buffer = 0 }
+  local bufsilent = { silent = true, buffer = bufnr }
 
+  -- Definition and declaration
+  vim.nnoremap('gd', '<cmd>lua require("lspsaga.provider").preview_definition()<Cr>', bufsilent)
   vim.nnoremap('gD', '<cmd>lua vim.lsp.buf.declaration()<Cr>', bufsilent)
-  vim.nnoremap('gd', '<cmd>lua vim.lsp.buf.definition()<Cr>', bufsilent)
-  vim.nnoremap('K', '<cmd>lua vim.lsp.buf.hover()<Cr>', bufsilent)
   vim.nnoremap('gi', '<cmd>lua vim.lsp.buf.implementation()<Cr>', bufsilent)
-  vim.nnoremap('<C-K>', '<cmd>lua vim.lsp.buf.signature_help()<Cr>', bufsilent)
   vim.nnoremap('g<C-t>', '<cmd>lua vim.lsp.buf.type_definition()<Cr>', bufsilent)
-  vim.nnoremap('gR', '<cmd>lua vim.lsp.buf.rename()<Cr>', bufsilent)
-  vim.nnoremap('gr', '<cmd>lua vim.lsp.buf.references()<Cr>', bufsilent)
-  vim.nnoremap('gA', '<cmd>lua vim.lsp.buf.code_action()<Cr>', bufsilent)
+
+  -- Information
+  vim.nnoremap('K', '<cmd>lua require("lspsaga.hover").render_hover_doc()<Cr>', bufsilent)
+  vim.nnoremap('<C-k>', '<cmd>lua require("lspsaga.signaturehelp").signature_help()<Cr>', bufsilent)
+  vim.nnoremap('<A-J>', '<cmd>lua require("lspsaga.action").smart_scroll_with_saga(1)<Cr>', bufsilent)
+  vim.nnoremap('<A-K>', '<cmd>lua require("lspsaga.action").smart_scroll_with_saga(-1)<Cr>', bufsilent)
+
+  -- Rename
+  vim.nnoremap('gR', '<cmd>lua require("lspsaga.rename").rename()<Cr>', bufsilent)
+
+  -- References and symbols
+  vim.nnoremap('gr', '<cmd>lua require("lspsaga.provider").lsp_finder()<Cr>', bufsilent)
+
+  -- Code action
+  vim.nnoremap('gA', '<cmd>lua require("lspsaga.codeaction").code_action()<Cr>', bufsilent)
+  vim.vnoremap('gA', ':<C-u>lua require("lspsaga.codeaction").range_code_action()<Cr>', bufsilent)
 
   -- Diagnostics
-  vim.nnoremap('<leader>ds', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<Cr>', bufsilent)
-  vim.nnoremap('<leader>dn', '<cmd>lua vim.lsp.diagnostic.goto_next()<Cr>', bufsilent)
-  vim.nnoremap('<leader>dN', '<cmd>lua vim.lsp.diagnostic.goto_prev()<Cr>', bufsilent)
-  vim.nnoremap('<leader>do', '<cmd>lua vim.lsp.diagnostic.set_loclist()<Cr>', bufsilent)
+  vim.nnoremap('<leader>dl', '<cmd>lua require("lspsaga.diagnostic").show_line_diagnostics()<Cr>', bufsilent)
+  vim.nnoremap('<leader>dc', '<cmd>lua require("lspsaga.diagnostic").show_cursor_diagnostics()<Cr>', bufsilent)
+  vim.nnoremap('<leader>dn', '<cmd>lua require("lspsaga.diagnostic").lsp_jump_diagnostic_next()<Cr>', bufsilent)
+  vim.nnoremap('<leader>dN', '<cmd>lua require("lspsaga.diagnostic").lsp_jump_diagnostic_prev()<Cr>', bufsilent)
 
   if capabilities.document_formatting then
     vim.nnoremap('gF', '<cmd>lua vim.lsp.buf.formatting()<Cr>', bufsilent)
@@ -87,13 +103,10 @@ local on_attach = function(client)
   if capabilities.document_highlight then
     vim.augroup('LspDocumentHighlight', {
       { 'CursorHold', 0, 'lua vim.lsp.buf.document_highlight()' },
-      { 'CursorHold', 0, 'lua vim.lsp.diagnostic.show_line_diagnostics()' },
+      { 'CursorHold', 0, 'lua require("lspsaga.diagnostic").show_cursor_diagnostics()' },
       { 'CursorMoved', 0, 'lua vim.lsp.buf.clear_references()' },
     })
   end
-
-  -- Enable omnifunc completion
-  -- vim.setlocal('omnifunc', 'v:lua.vim.lsp.omnifunc')
 end
 
 -- Active servers
@@ -104,8 +117,8 @@ for server, config in pairs(servers) do
   config.on_attach = on_attach
   config.capabilities = vim.tbl_deep_extend('keep',
     config.capabilities or {},
-    default_capabilities,
-    snippet_capabilities
+    snippet_capabilities,
+    default_capabilities
   )
 
   lspconfig[server].setup(config)
