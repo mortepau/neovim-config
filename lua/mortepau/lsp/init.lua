@@ -61,35 +61,10 @@ local on_attach = function(client)
   -- vim.setlocal('omnifunc', 'v:lua.vim.lsp.omnifunc')
 end
 
-local servers = {}
+-- Active servers
+local servers = require('mortepau.lsp.server')
 
--- Bash
-servers.bashls = require('mortepau.lsp.bashls')
-
--- Elixir
-servers.elixirls = require('mortepau.lsp.elixirls')
-
--- C, C++
-servers.clangd = require('mortepau.lsp.clangd')
-
--- Arduino ( arduino/arduino-language-server )
--- servers.arduino = require('mortepau.lsp.arduino')
-
--- Python
-servers.pyright = require('mortepau.lsp.pyright')
-
--- Lua
-servers.sumneko_lua = require('mortepau.lsp.sumneko')
-
--- Vim
-servers.vimls = require('mortepau.lsp.vimls')
-
--- Rust
-servers.rls = require('mortepau.lsp.rustls')
-
--- Typescript
-servers.tsserver = require('mortepau.lsp.tsserver')
-
+-- Configure servers
 for server, config in pairs(servers) do
   config.on_attach = on_attach
   config.capabilities = vim.tbl_deep_extend('keep',

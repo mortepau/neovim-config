@@ -1,3 +1,15 @@
+--[[
+Requirements:
+  ninja
+Installation instructions:
+  git clone https://github.com/sumneko/lua-language-server
+  cd lua-language-server
+  git submodule update --init --recursive
+  cd 3rd/luamake
+  ninja -f ninja/macos.ninja
+  cd ../..
+  ./3rd/luamake/luamake rebuild
+--]]
 local path_util = require('lspconfig.util')
 local config = {}
 
@@ -18,6 +30,7 @@ config.settings = {
       path = vim.split(package.path, ';'),
     },
     diagnostics = {
+      enable = true,
       globals = { 'vim' },
     },
     workspace = {
