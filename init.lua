@@ -5,11 +5,11 @@ _G.mortepau = _G.mortepau or {}
 -- Set the mapleader early on, so that later configurations use it
 vim.g.mapleader = ','
 
--- Load my personal configuration
-require('mortepau')
-
 local colorscheme = 'toast'
 pcall(vim.cmd, 'colorscheme ' .. colorscheme)
+
+-- Load my personal configuration
+require('mortepau')
 
 -- TODO: Check out sessions, views
 -- TODO: Check out include and includeexpr
