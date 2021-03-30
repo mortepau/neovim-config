@@ -1,5 +1,6 @@
 local lspconfig = require('lspconfig')
 
+-- Handlers
 vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
     -- Enable signs
@@ -13,9 +14,10 @@ vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
   }
 )
 
+-- Capabilities
+
 -- Default capabilities
 local default_capabilities = vim.lsp.protocol.make_client_capabilities()
-default_capabilities.textDocument.completion.dynamicRegistration = true
 
 -- Allow for the server to send snippets
 local snippet_capabilities = {
@@ -28,6 +30,34 @@ local snippet_capabilities = {
   }
 }
 
+-- Highlights
+-- Modify the signs shown in the column
+vim.fn.sign_define('LspDiagnosticsSignError', {
+  text = '', -- uf05e
+  texthl = 'LspDiagnosticsDefaultError',
+  linehl = '',
+  numhl = ''
+})
+vim.fn.sign_define('LspDiagnosticsSignWarning', {
+  text = '', -- uf071
+  texthl = 'LspDiagnosticsDefaultWarning',
+  linehl = '',
+  numhl = ''
+})
+vim.fn.sign_define('LspDiagnosticsSignInformation', {
+  text = '', -- uf12a
+  texthl = 'LspDiagnosticsDefaultInformation',
+  linehl = '',
+  numhl = ''
+})
+vim.fn.sign_define('LspDiagnosticsSignHint', {
+  text = '', -- uf00c
+  texthl = 'LspDiagnosticsDefaultHint',
+  linehl = '',
+  numhl = ''
+})
+
+-- Attach function
 local on_attach = function(client)
   -- Find the server's capabilities
   local capabilities = client.resolved_capabilities
@@ -38,15 +68,20 @@ local on_attach = function(client)
   vim.nnoremap('gd', '<cmd>lua vim.lsp.buf.definition()<Cr>', bufsilent)
   vim.nnoremap('K', '<cmd>lua vim.lsp.buf.hover()<Cr>', bufsilent)
   vim.nnoremap('gi', '<cmd>lua vim.lsp.buf.implementation()<Cr>', bufsilent)
-  vim.nnoremap('<C-s>', '<cmd>lua vim.lsp.buf.signature_help()<Cr>', bufsilent)
-  vim.nnoremap('gTD', '<cmd>lua vim.lsp.buf.type_definition()<Cr>', bufsilent)
-  vim.nnoremap('<leader>rn', '<cmd>lua vim.lsp.buf.rename()<Cr>', bufsilent)
+  vim.nnoremap('<C-K>', '<cmd>lua vim.lsp.buf.signature_help()<Cr>', bufsilent)
+  vim.nnoremap('g<C-t>', '<cmd>lua vim.lsp.buf.type_definition()<Cr>', bufsilent)
+  vim.nnoremap('gR', '<cmd>lua vim.lsp.buf.rename()<Cr>', bufsilent)
   vim.nnoremap('gr', '<cmd>lua vim.lsp.buf.references()<Cr>', bufsilent)
   vim.nnoremap('gA', '<cmd>lua vim.lsp.buf.code_action()<Cr>', bufsilent)
-  vim.nnoremap('<leader>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<Cr>', bufsilent)
+
+  -- Diagnostics
+  vim.nnoremap('<leader>ds', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<Cr>', bufsilent)
+  vim.nnoremap('<leader>dn', '<cmd>lua vim.lsp.diagnostic.goto_next()<Cr>', bufsilent)
+  vim.nnoremap('<leader>dN', '<cmd>lua vim.lsp.diagnostic.goto_prev()<Cr>', bufsilent)
+  vim.nnoremap('<leader>do', '<cmd>lua vim.lsp.diagnostic.set_loclist()<Cr>', bufsilent)
 
   if capabilities.document_formatting then
-    vim.nnoremap('<leader>lf', '<cmd>lua vim.lsp.buf.formatting()<Cr>', bufsilent)
+    vim.nnoremap('gF', '<cmd>lua vim.lsp.buf.formatting()<Cr>', bufsilent)
   end
 
   if capabilities.document_highlight then
@@ -69,7 +104,7 @@ for server, config in pairs(servers) do
   config.on_attach = on_attach
   config.capabilities = vim.tbl_deep_extend('keep',
     config.capabilities or {},
-    -- default_capabilities,
+    default_capabilities,
     snippet_capabilities
   )
 
