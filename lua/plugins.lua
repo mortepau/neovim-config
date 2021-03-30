@@ -170,7 +170,11 @@ local plugins = {
     config = function() require('mortepau.plugins.overlength') end
   },
   { 'markonm/traces.vim' },
-  -- TODO (mortepau): Yggdroot/indentline to vim-blankline or something
+  {
+    'lukas-reineke/indent-blankline.nvim',
+    branch = 'lua',
+    config = function() require('mortepau.plugins.indent_blankline') end
+  },
   {
     'norcally/nvim-colorizer.lua',
     config = function() require('mortepau.plugins.colorizer') end
