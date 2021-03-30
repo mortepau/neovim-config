@@ -94,7 +94,7 @@ vim.set('splitright', true)
 -- grepformat = '%f:%l:%c:%m',
 
 -- Column
-vim.set('signcolumn', 'yes:1')
+vim.set('signcolumn', 'yes:2')
 vim.set('number', true)
 
 -- Scrolling
