@@ -1,6 +1,8 @@
 -- Source my rc-file (init.lua or init.vim)
 vim.nnoremap('<leader>Fe', 'luaeval("mortepau.file.source(_A)<Cr>", $MYVIMRC)')
 
+vim.nnoremap('<leader>Fp', ':execute(":lcd " . expand("%:h"))<CR>:pwd<CR>')
+
 -- Conditional save and force save
 vim.nnoremap('<leader>w', ':if &modified | write! | endif<Cr>', { silent = true })
 vim.nnoremap('<leader>W', ':write!<Cr>')
