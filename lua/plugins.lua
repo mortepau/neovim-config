@@ -31,6 +31,7 @@ local plugins = {
     config = function() require('mortepau.plugins.duokey') end,
     disable = true
   },
+  { dir_or_git('codicons.nvim') },
 
   -- LSP
   { 'neovim/nvim-lspconfig' },
