@@ -30,3 +30,7 @@ vim.augroup('ConfigureBuftype', {
   { 'BufWinEnter', '*', 'call luaeval("mortepau.buftype.configure(tonumber(_A))", expand("<abuf>"))' },
   { 'TermOpen', '*', 'call luaeval("mortepau.buftype.configure_terminal(tonumber(_A))", expand("<abuf>"))' },
 })
+
+vim.augroup('AutoCompile', {
+  { 'BufWritePost', '~/.config/nvim/lua/plugins.lua', 'PackerCompile' }
+})
