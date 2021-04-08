@@ -1,2 +1,2 @@
-vim.nnoremap('ga', '<Plug>(EasyAlign)')
-vim.xnoremap('ga', '<Plug>(EasyAlign)')
+vim.nmap('ga', '<Plug>(EasyAlign)')
+vim.xmap('ga', '<Plug>(EasyAlign)')
