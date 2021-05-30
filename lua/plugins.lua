@@ -35,6 +35,10 @@ local plugins = {
     dir_or_git('codicons.nvim'),
     config = function() require('mortepau.plugins.codicons') end,
   },
+  {
+    dir_or_git('terminal.nvim'),
+    config = function() require('mortepau.plugins.terminal') end,
+  },
 
   -- LSP
   { 'neovim/nvim-lspconfig' },
@@ -42,10 +46,6 @@ local plugins = {
     'glepnir/lspsaga.nvim',
     config = function() require('mortepau.plugins.lspsaga') end
   },
-  -- {
-  --   'RishabhRD/nvim-lsputils',
-  --   requires = { 'RishabhRD/popfix' }
-  -- },
   -- { 'tjdevries/nlua.nvim' },
 
   -- Autocompletion
@@ -55,7 +55,7 @@ local plugins = {
   },
   {
     'hrsh7th/vim-vsnip',
-    requires = { 'cstrap/python-snippets',  },
+    requires = { 'mortepau/vsnip-snips',  },
     config = function() require('mortepau.plugins.vsnip') end
   },
 
@@ -208,7 +208,6 @@ local plugins = {
     requires = { 'nvim-lua/plenary.nvim' },
     config = function() require('mortepau.plugins.gitsigns') end
   },
-  -- TODO (mortepau): gitsigns lua
   {
     'rhysd/git-messenger.vim',
     cmd = { 'GitMessenger' },
