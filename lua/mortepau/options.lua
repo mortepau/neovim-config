@@ -1,89 +1,109 @@
 local ps = jit.os == 'Windows' and '\\' or '/'
 
 -- System
-vim.set('encoding', 'UTF-8')
-vim.set('fileformats', 'unix,dos,mac')
+vim.opt.encoding = 'UTF-8'
+vim.opt.fileformats = { 'unix', 'dos', 'mac' }
+
 -- Colors
-vim.set('termguicolors', true)
-vim.set('background', 'dark')
+vim.opt.termguicolors = true
+vim.opt.background = 'dark'
 
 -- Buffer
-vim.set('hidden', true)
-vim.set('switchbuf', 'useopen,usetab,vsplit')
+vim.opt.hidden = true
+vim.opt.switchbuf = { 'useopen', 'vsplit', 'uselast' }
 
 -- Statusline
-vim.set('showmode', false)
-vim.set('showtabline', 1)
-vim.set('cmdheight', 2)
-vim.set('laststatus', 2)
-vim.set('ruler', true)
-vim.set('shortmess', 'filmnrxoOtTcF')
+vim.opt.showmode = false
+vim.opt.showtabline = 1
+vim.opt.cmdheight = 2
+vim.opt.laststatus = 2
+vim.opt.ruler = true
+vim.opt.shortmess = vim.opt.shortmess + 'mrc'
 
 -- Scrolling
-vim.set('sidescroll', 1)
+vim.opt.sidescroll = 1
 
 -- Backspacing
-vim.set('backspace', 'indent,eol,start')
+vim.opt.backspace = { 'indent', 'eol', 'start' }
 
 -- Formatting (indent)
-vim.set('shiftround', true)
-vim.set('smarttab', true)
+vim.opt.shiftround = true
+vim.opt.smarttab = true
 
 -- Formatting (wrap)
-vim.set('showbreak', '↳ ')
-vim.set('whichwrap', '<,>,h,l')
+vim.opt.showbreak = '↳ '
+vim.opt.whichwrap = { 
+  ['<'] = true,
+  ['>'] = true,
+  ['h'] = true,
+  ['l'] = true,
+}
 
 -- Formatting (fold)
-vim.set('foldlevelstart', 99)
+vim.opt.foldlevelstart = 99
 
 -- Searching
-vim.set('ignorecase', true)
-vim.set('smartcase', true)
-vim.set('incsearch', true)
-vim.set('hlsearch', false)
-vim.set('magic', true)
-vim.set('inccommand','split')
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+vim.opt.incsearch = true
+vim.opt.hlsearch = false
+vim.opt.magic = true
+vim.opt.inccommand = 'nosplit'
 -- TODO: Set path
-vim.set('path', '.,/usr/include,,~/.config/**')
+vim.opt.path = { '.', '~/.config/**' }
 
 -- Menu
-vim.set('wildmenu', true)
-vim.set('wildmode', 'longest,full')
-vim.set('wildignore', '*.o,*~,*.pyc,.git,.hg,.svn,*.out,*.jpg,*.png,*.jpeg,*.gif,*.DS_Store,**' .. ps .. 'node_modules' .. ps .. '**')
-vim.set('wildcharm', vim.fn.char2nr('')) -- Integer equivalent to <C-z>
+vim.opt.wildmenu = true
+vim.opt.wildmode = { 'longest', 'full' }
+vim.opt.wildignore = {
+  '*.o',
+  '*~',
+  '*.pyc',
+  '.git',
+  '.hg',
+  '.svn',
+  '*.out',
+  '*.jpg',
+  '*.png',
+  '*.jpeg',
+  '*.gif',
+  '*.DS_Store',
+  '**' .. ps .. 'node_modules' .. ps .. '**'
+}
+vim.opt.wildcharm = vim.fn.char2nr('') -- Integer equivalent to <C-z>
 
 -- History
-vim.set('history', 500)
-vim.set('undodir', vim.fn.stdpath('data') .. ps .. 'tmp_dirs' .. ps .. 'undodir')
-vim.set('backup', false)
-vim.set('writebackup', false)
+vim.opt.history = 500
+vim.opt.undodir = vim.fn.stdpath('data') .. ps .. 'tmp_dirs' .. ps .. 'undodir'
+vim.opt.backup = false
+vim.opt.writebackup = false
 
 -- Updating
-vim.set('lazyredraw', true)
-vim.set('redrawtime', 1500)
-vim.set('updatetime', 300)
-vim.set('autoread', true)
+vim.opt.lazyredraw = true
+vim.opt.redrawtime = 1500
+vim.opt.updatetime = 300
+vim.opt.autoread = true
 
 -- Cursor
-vim.set('mouse', 'nv')
+vim.opt.mouse = 'nv'
 
 -- Error
-vim.set('belloff', 'all')
-vim.set('errorbells', false)
-vim.set('visualbell', false)
+vim.opt.belloff = 'all'
+vim.opt.errorbells = false
+vim.opt.visualbell = false
 
 -- Completion
-vim.set('completeopt', 'menuone,noinsert,noselect')
-vim.set('complete', '.,w,b,k,i')
-vim.set('showmatch', true)
-vim.set('matchtime', 5)
-vim.set('pumwidth', 7)
-vim.set('pumheight', 40)
+vim.opt.completeopt = {'menuone' ,'noinsert', 'noselect'}
+vim.opt.complete = '.,w,b,k,i'
+vim.opt.showmatch = true
+vim.opt.matchtime = 5
+vim.opt.pumwidth = 7
+vim.opt.pumheight = 40
 
 -- Window
-vim.set('equalalways', false)
-vim.set('splitbelow', true)
-vim.set('splitright', true)
+vim.opt.equalalways = false
+vim.opt.splitbelow = true
+vim.opt.splitright = true
 
 -- File browser
 -- bsdir = 'current'
@@ -94,46 +114,52 @@ vim.set('splitright', true)
 -- grepformat = '%f:%l:%c:%m',
 
 -- Column
-vim.set('signcolumn', 'yes:2')
-vim.set('number', true)
+vim.opt.signcolumn = 'yes:2'
+vim.opt.number = true
 
 -- Scrolling
-vim.set('scrolloff', 7)
-vim.set('sidescrolloff', 3)
+vim.opt.scrolloff = 7
+vim.opt.sidescrolloff = 3
 
 -- Display
-vim.set('list', true)
-vim.set('listchars', "tab:»·,nbsp:+,trail:·,extends:→,precedes:←")
-vim.set('concealcursor', 'niv')
-vim.set('conceallevel', 2)
-vim.set('cursorline', true)
+vim.opt.list = true
+vim.opt.listchars = {
+  tab = '»·',
+  nbsp = '+',
+  trail = '·',
+  extends = '→',
+  precedes = '←'
+}
+vim.opt.concealcursor = 'niv'
+-- vim.set('conceallevel', 2)
+vim.opt.cursorline = true
 
 -- Formatting (indent)
-vim.set('linebreak', true)
-vim.set('wrap', false)
+vim.opt.linebreak = true
+vim.opt.wrap = false
 
 -- Formatting (fold)
-vim.set('foldenable', true)
-vim.set('foldmethod', 'indent')
+vim.opt.foldenable = true
+vim.opt.foldmethod = 'indent'
 
 -- History
-vim.set('swapfile', false)
-vim.set('undofile', true)
+vim.opt.swapfile = false
+vim.opt.undofile = true
 
 -- Spelling
-vim.set('spellfile', vim.fn.stdpath('data') .. ps .. 'spell' .. ps .. 'utf-8.add')
+vim.opt.spellfile = vim.fn.stdpath('data') .. ps .. 'spell' .. ps .. 'utf-8.add'
 
 -- Formatting
 -- Fix this, need to actually not use 'o'
-vim.set('formatoptions', 'crq2jl')
+vim.opt.formatoptions = vim.opt.formatoptions + 'r2l'
 
 -- Formatting (indent)
-vim.set('shiftwidth', 4)
-vim.set('tabstop', 4)
-vim.set('softtabstop', 4)
-vim.set('autoindent', true)
-vim.set('smartindent', true)
-vim.set('expandtab', true)
+vim.opt.shiftwidth = 4
+vim.opt.tabstop = 4
+vim.opt.softtabstop = 4
+vim.opt.autoindent = true
+vim.opt.smartindent = true
+vim.opt.expandtab = true
 
 -- Formatting (wrap)
-vim.set('textwidth', 80)
+vim.opt.textwidth = 80

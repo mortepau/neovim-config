@@ -22,7 +22,8 @@ vim.augroup('ManualChecktime', {
 
 -- Highlight yanked text
 vim.augroup('YankHighlight', {
-  'TextYankPost', '*', 'silent! lua vim.highlight.on_yank("incsearch", 500, vim.v.event)'
+  -- 'TextYankPost', '*', 'silent! lua vim.highlight.on_yank("incsearch", 500, vim.v.event)'
+  'TextYankPost', '*', 'silent! lua vim.highlight.on_yank({ on_visual = false, higroup = "IncSearch", timeout = 500 })'
 })
 
 -- Configure based on buftype, separate autocmd for terminal buffer as a workaround

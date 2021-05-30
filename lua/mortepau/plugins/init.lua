@@ -1,5 +1,9 @@
 local M = {}
 
+if not mortepau.plugin_func then
+	mortepau.plugin_func = {}
+end
+
 local path_separator = jit.os == 'Windows' and '\\' or '/'
 
 function M.install()
@@ -47,7 +51,7 @@ function M.init()
 
   -- Create commands to use the package manager
   local command_template = 'command! -nargs=0 %s lua mortepau.package_manager.%s()<Cr>'
-  vim.cmd(string.format(command_template, 'PackerCompile', 'compile'))
+  vim.cmd('command! -nargs=* PackerCompile lua mortepau.package_manager.compile(<q-args>)<Cr>')
   vim.cmd(string.format(command_template, 'PackerInstall', 'install'))
   vim.cmd(string.format(command_template, 'PackerUpdate',  'update'))
   vim.cmd(string.format(command_template, 'PackerSync',    'sync'))

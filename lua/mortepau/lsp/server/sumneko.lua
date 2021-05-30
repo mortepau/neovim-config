@@ -31,7 +31,7 @@ config.settings = {
     },
     diagnostics = {
       enable = true,
-      globals = { 'vim' },
+      globals = { 'vim', 'hs', 'it', 'describe', 'before_each', 'after_each', 'P', 'R', 'Reload', 'mortepau' },
     },
     workspace = {
       library = {
@@ -41,9 +41,9 @@ config.settings = {
       maxPreload = 1000,
       preloadFileSize = 1000,
     },
-    -- telemetry = {
-    --   enable = false,
-    -- },
+    telemetry = {
+      enable = false,
+    },
   }
 }
 

@@ -53,5 +53,5 @@ require('gitsigns').setup({
     ['x ig'] = ':<C-U>lua require("gitsigns").text_object()<Cr>',
     ['o ig'] = ':<C-U>lua require("gitsigns").text_object()<Cr>',
   },
-  sign_priority = 20,
+  sign_priority = 100,
 })

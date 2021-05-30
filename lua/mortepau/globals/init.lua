@@ -49,7 +49,6 @@ local function reload_matching(term)
   end
 end
 
-R = {
-  single = reload_single,
-  match  = reload_matching,
-}
+ReloadSingle = reload_single
+Reload = reload_matching
+R = R
