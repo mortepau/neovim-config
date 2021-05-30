@@ -33,8 +33,8 @@ function mortepau.buftype.configure_help(buf)
   vim.nnoremap('q', '<cmd>q<Cr>', { buffer = buf })
 
   -- Set local options
-  vim.setlocal('number', true)
-  vim.setlocal('relativenumber', false)
+  vim.opt.number = true
+  vim.opt.relativenumber = true
 
   -- Add augroup
   vim.augroup('HelpCursorLine', {

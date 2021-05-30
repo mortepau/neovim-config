@@ -131,7 +131,7 @@ vim.opt.listchars = {
   precedes = '←'
 }
 vim.opt.concealcursor = 'niv'
--- vim.set('conceallevel', 2)
+-- vim.opt.conceallevel = 2
 vim.opt.cursorline = true
 
 -- Formatting (indent)

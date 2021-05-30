@@ -1,10 +1,5 @@
 local map = require('mortepau.vim.map')
-local opt = require('mortepau.vim.opt')
 local autocmd = require('mortepau.vim.autocmd')
-
--- Option specific functions
-vim.set = opt.set
-vim.setlocal = opt.setlocal
 
 -- Keymap specific functions ( Recursive )
 vim.map = map.map
