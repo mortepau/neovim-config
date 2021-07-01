@@ -5,10 +5,16 @@ function mortepau.syntax.stack()
     return
   end
 
+  -- Treesitter is possibly enabled for the buffer
+  if vim.opt_local.syntax:get() == '' then
+    vim.cmd('TSHighlightCapturesUnderCursor')
+    return
+  end
+
   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
 
   local synstack = vim.fn.synstack(line, col+1)
-  return vim.tbl_map(function(v) return vim.fn.synIDattr(v, 'name') end, synstack)
+  P(vim.tbl_map(function(v) return vim.fn.synIDattr(v, 'name') end, synstack))
 end
 
 function mortepau.syntax.get_highlight(group)

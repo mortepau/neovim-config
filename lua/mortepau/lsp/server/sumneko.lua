@@ -27,7 +27,7 @@ config.settings = {
   Lua = {
     runtime = {
       version = 'LuaJIT',
-      path = vim.split(package.path, ';'),
+      path = vim.tbl_flatten({ 'lua/?.lua', 'lua/?/init.lua', vim.split(package.path, ';') }),
     },
     diagnostics = {
       enable = true,
@@ -38,8 +38,8 @@ config.settings = {
         [vim.fn.expand('$VIMRUNTIME/lua')] = true,
         [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
       },
-      maxPreload = 1000,
-      preloadFileSize = 1000,
+      maxPreload = 2000,
+      preloadFileSize = 150,
     },
     telemetry = {
       enable = false,
@@ -47,4 +47,4 @@ config.settings = {
   }
 }
 
-return config
+return require('lua-dev').setup({ lspconfig = config })

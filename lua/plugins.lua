@@ -48,6 +48,12 @@ local plugins = {
   },
   -- { 'tjdevries/nlua.nvim' },
 
+  -- DAP
+  {
+    'mfussenegger/nvim-dap',
+    config = function() require('mortepau.plugins.dap') end
+  },
+
   -- Autocompletion
   {
     'hrsh7th/nvim-compe',
@@ -58,9 +64,21 @@ local plugins = {
     requires = { 'mortepau/vsnip-snips',  },
     config = function() require('mortepau.plugins.vsnip') end
   },
+  {
+    'L3MON4D3/LuaSnip',
+    config = function() require('mortepau.plugins.luasnip') end,
+  },
 
   -- Treesitter
-  { 'nvim-treesitter/nvim-treesitter' },
+  {
+    'nvim-treesitter/nvim-treesitter',
+    requires = {
+      'nvim-treesitter/nvim-treesitter-textobjects',
+      'nvim-treesitter/playground',
+      -- 'nvim-treesitter/nvim-tree-docs',
+    },
+    config = function() require('mortepau.plugins.treesitter') end,
+  },
 
   -- Searching
   -- TODO (mortepau): Create something simple yourself to reduce dependencies
@@ -75,7 +93,7 @@ local plugins = {
   { 'tpope/vim-obsession' },
   { 'tpope/vim-projectionist' },
   {
-    'kkomen/vim-doge',
+    'kkoomen/vim-doge',
     run = ':call doge#install()',
     cmd = { 'DogeGenerate' }
   },
@@ -184,7 +202,7 @@ local plugins = {
     config = function() require('mortepau.plugins.indent_blankline') end
   },
   {
-    'norcally/nvim-colorizer.lua',
+    'norcalli/nvim-colorizer.lua',
     config = function() require('mortepau.plugins.colorizer') end
   },
   {
@@ -196,6 +214,9 @@ local plugins = {
     cmd = { 'Tabularize' }
   },
   -- TODO (mortepau): moaqa/dial.nvim <C-a> and <C-x> enhancements
+
+  -- Documentation
+  { 'nanotee/luv-vimdocs' },
 
   -- Git
   {
@@ -239,6 +260,7 @@ local plugins = {
   -- Lua
   { 'tjdevries/manillua.nvim' },
   { 'euclidianAce/BetterLua.vim' },
+  { 'folke/lua-dev.nvim' },
 
   -- Markdown
   {

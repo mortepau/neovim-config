@@ -1,8 +1,8 @@
 -- Use relative numbers when inside buffer and not in insert mode
-vim.augroup('NumberToggle', {
-  { {'BufEnter', 'FocusGained', 'InsertLeave'}, '*', 'if &filetype !=# "help" | set relativenumber | endif' },
-  { {'BufLeave', 'FocusLost', 'InsertEnter'}, '*', 'if &filetype !=# "help" | set norelativenumber | endif' },
-})
+-- vim.augroup('NumberToggle', {
+--   { {'BufEnter', 'FocusGained', 'InsertLeave'}, '*', 'if &filetype !=# "help" | set relativenumber | endif' },
+--   { {'BufLeave', 'FocusLost', 'InsertEnter'}, '*', 'if &filetype !=# "help" | set norelativenumber | endif' },
+-- })
 
 -- Use cursorline when not in insert mode
 vim.augroup('CursorLineToggle', {

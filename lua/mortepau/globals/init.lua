@@ -51,4 +51,5 @@ end
 
 ReloadSingle = reload_single
 Reload = reload_matching
-R = R
+R = Reload
+vim.cmd([[command! -nargs=1 Reload call luaeval("Reload(_A)", <f-args>)]])

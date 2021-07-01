@@ -46,7 +46,7 @@ vim.cnoremap('<Tab>', 'getcmdtype() =~ "[/?]" ? "<C-g>" : "<C-z>"', { expr = tru
 vim.cnoremap('<S-Tab>', 'getcmdtype() =~ "[/?]" ? "<C-t>" : "<S-Tab>"', { expr = true })
 
 -- Show current syntax groups
-vim.nnoremap('<leader>hg', ':lua P(mortepau.syntax.stack())<Cr>')
+vim.nnoremap('<leader>hg', ':lua mortepau.syntax.stack()<Cr>', { silent = true })
 vim.nnoremap('<leader>hw', ':lua mortepau.syntax.highlight_whitespace()<Cr>')
 
 -- Clean excess whitespace

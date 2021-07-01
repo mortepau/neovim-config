@@ -17,3 +17,4 @@ require('mortepau')
 -- TODO: Check out makeprg
 -- TODO: Providers (netrw, vimball, ++)
 -- TODO: RishabhRD/nvim-lsputils: Fix keybindings?
+-- TODO: vim-dirvish justinmk

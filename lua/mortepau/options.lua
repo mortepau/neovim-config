@@ -32,7 +32,7 @@ vim.opt.smarttab = true
 
 -- Formatting (wrap)
 vim.opt.showbreak = '↳ '
-vim.opt.whichwrap = { 
+vim.opt.whichwrap = {
   ['<'] = true,
   ['>'] = true,
   ['h'] = true,
@@ -97,8 +97,8 @@ vim.opt.completeopt = {'menuone' ,'noinsert', 'noselect'}
 vim.opt.complete = '.,w,b,k,i'
 vim.opt.showmatch = true
 vim.opt.matchtime = 5
-vim.opt.pumwidth = 7
-vim.opt.pumheight = 40
+vim.opt.pumwidth = 40
+vim.opt.pumheight = 10
 
 -- Window
 vim.opt.equalalways = false
@@ -163,3 +163,5 @@ vim.opt.expandtab = true
 
 -- Formatting (wrap)
 vim.opt.textwidth = 80
+
+vim.g.vimsyn_embed = 'l'
