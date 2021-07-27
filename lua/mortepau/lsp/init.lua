@@ -7,7 +7,7 @@ vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
     -- Enable signs
     signs = true,
     -- Disable virtual text
-    virtual_text = false,
+    virtual_text = true,
     -- Enable underline diagnostics
     underline = true,
     -- Do not update in insert mode
@@ -34,11 +34,11 @@ local snippet_capabilities = {
 -- Highlights
 
 -- Add highlight groups
-local error_group = { color = { guifg = '#fc514e' }, attribute = {} }
-local warning_group = { color = { guifg = '#e3d18a' }, attribute = {} }
+local error_group       = { color = { guifg = '#fc514e' }, attribute = {} }
+local warning_group     = { color = { guifg = '#e3d18a' }, attribute = {} }
 local information_group = { color = { guifg = '#c3ccdc' }, attribute = {} }
-local hint_group = { color = { guifg = '#82aaff' }, attribute = {} }
-local reference_group = { color = { guibg = '#244d6c' }, attribute = {} }
+local hint_group        = { color = { guifg = '#82aaff' }, attribute = {} }
+local reference_group   = { color = { guibg = '#244d6c' }, attribute = {} }
 vim.cmd('highlight ' .. mortepau.syntax.format_highlight('LspDiagnosticsDefaultError', error_group))
 vim.cmd('highlight ' .. mortepau.syntax.format_highlight('LspDiagnosticsDefaultWarning', warning_group))
 vim.cmd('highlight ' .. mortepau.syntax.format_highlight('LspDiagnosticsDefaultInformation', information_group))
@@ -100,7 +100,7 @@ local on_attach = function(client, bufnr)
 
   -- Rename
   if capabilities.rename then
-    vim.nnoremap('gR', '<cmd>lua require("lspsaga.rename").rename()<Cr>', bufsilent)
+    vim.nnoremap('gR', require('mortepau.lsp.actions').rename, bufsilent)
   end
 
   -- References and symbols

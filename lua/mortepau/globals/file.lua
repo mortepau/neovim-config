@@ -1,5 +1,6 @@
 mortepau.file = mortepau.file or {}
 
+-- TODO: This is obsolete when using Neovim v0.5
 function mortepau.file.source(filename)
   if filename:sub(1) == '%' then filename = vim.fn.expand(filename) end
   local is_lua = not not string.find(filename, '.lua$')

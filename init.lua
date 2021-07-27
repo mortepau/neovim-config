@@ -1,13 +1,57 @@
 -- Entry point for the Neovim configuration files
 
+-- Create a global table holding my custom functionality
 _G.mortepau = _G.mortepau or {}
 _G.mortepau.user = vim.env.USER == 'mortepau' and 'mortepau' or 'mopa'
+_G.mortepau.git_username = 'mortepau'
+_G.mortepau.at_home = vim.env.AT_HOME ~= nil
 
 -- Set the mapleader early on, so that later configurations use it
 vim.g.mapleader = ','
 
 local colorscheme = 'toast'
-pcall(vim.cmd, 'colorscheme ' .. colorscheme)
+
+local ok, color = pcall(require, colorscheme)
+if ok then
+  color.set()
+else
+  pcall(vim.cmd, 'colorscheme ' .. colorscheme)
+end
+
+-- Disable some builtin plugins
+local plugins = {
+  ['matchit']    = false,
+  ['matchparen'] = false,
+  ['gzip']       = true,
+  ['netrw']      = true,
+  ['tarPlugin']  = true,
+  ['tar']        = true,
+  ['zipPlugin']  = true,
+  ['zip']        = true,
+}
+
+for name, disable in pairs(plugins) do
+  if disable then
+    vim.g['loaded_' .. name] = 1
+  end
+end
+
+-- Disable or enable remote-plugins
+local remotes = {
+  python      = false,
+  python3     = false,
+  ruby        = false,
+  perl        = false,
+  node        = false,
+}
+
+for name, value in pairs(remotes) do
+  if type(value) == 'string' then
+    vim.g[name .. 'host_prog'] = value
+  elseif not value then
+    vim.g['loaded_' .. name .. '_provider'] = 0
+  end
+end
 
 -- Load my personal configuration
 require('mortepau')
@@ -16,6 +60,4 @@ require('mortepau')
 -- TODO: Check out include and includeexpr
 -- TODO: Check out formatexpr and formatoptions
 -- TODO: Check out makeprg
--- TODO: Providers (netrw, vimball, ++)
--- TODO: RishabhRD/nvim-lsputils: Fix keybindings?
 -- TODO: vim-dirvish justinmk

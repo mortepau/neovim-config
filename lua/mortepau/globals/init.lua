@@ -1,5 +1,3 @@
--- Keep the global configuration if it exist, don't overwrite it
-mortepau = mortepau or {}
 
 -- Load buftype functionality
 require('mortepau.globals.buftype')

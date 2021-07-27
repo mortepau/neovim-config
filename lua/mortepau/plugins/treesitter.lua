@@ -25,7 +25,12 @@ local languages = {
 require('nvim-treesitter.configs').setup({
   ensure_installed = languages,
   highlight = { enable = true },
-  indent = { enable = true },
+  indent = {
+    enable = true,
+    disable = {
+      'python'
+    },
+  },
   incremental_selection = {
     enable = true,
     keymaps = {

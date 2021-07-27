@@ -1,13 +1,13 @@
-local git_username = 'mortepau'
 local ps = jit.os == 'Windows' and '\\' or '/'
 local plugin_dir = vim.fn.expand('$HOME') .. ps .. 'plugins'
+local at_work = not mortepau.at_home
 
 local function dir_or_git(name)
   local dir = plugin_dir .. ps .. name
   if vim.fn.isdirectory(dir) == 1 then
     return dir
   end
-  return git_username .. '/' .. name
+  return mortepau.git_username .. '/' .. name
 end
 
 local plugins = {
@@ -24,15 +24,12 @@ local plugins = {
   },
   {
     dir_or_git('vim-phoenix'),
+    disable = at_work,
     config = function() require('mortepau.plugins.phoenix') end
   },
   {
-    dir_or_git('vim-duokey'),
-    config = function() require('mortepau.plugins.duokey') end,
-    disable = true
-  },
-  {
     dir_or_git('codicons.nvim'),
+    disable = at_work,
     config = function() require('mortepau.plugins.codicons') end,
   },
   {
@@ -42,6 +39,7 @@ local plugins = {
 
   -- LSP
   { 'neovim/nvim-lspconfig' },
+  -- TODO: Try to remove lspsaga as I use barely anything from it
   {
     'glepnir/lspsaga.nvim',
     config = function() require('mortepau.plugins.lspsaga') end
@@ -58,11 +56,6 @@ local plugins = {
   {
     'hrsh7th/nvim-compe',
     config = function() require('mortepau.plugins.nvim_compe') end
-  },
-  {
-    'hrsh7th/vim-vsnip',
-    requires = { 'mortepau/vsnip-snips',  },
-    config = function() require('mortepau.plugins.vsnip') end
   },
   {
     'L3MON4D3/LuaSnip',
@@ -92,6 +85,7 @@ local plugins = {
   { 'tpope/vim-eunuch' },
   { 'tpope/vim-obsession' },
   { 'tpope/vim-projectionist' },
+  -- NOTE: Perhaps use treesitter-docs instead of vim-doge
   {
     'kkoomen/vim-doge',
     run = ':call doge#install()',
@@ -114,6 +108,7 @@ local plugins = {
   },
   {
     'rafcamlet/nvim-luapad',
+    disable = at_work,
     cmd = { 'Luapad', 'Luarun', 'Lua' }
   },
 
@@ -134,15 +129,6 @@ local plugins = {
       { 'n', 'gcc' },
       { 'n', 'cgc' },
       { 'n', 'cgu' },
-    }
-  },
-  {
-    'tommcdo/vim-exchange',
-    keys = {
-      { 'n', 'cx' },
-      { 'n', 'cxc' },
-      { 'n', 'cxx' },
-      { 'x', 'X' },
     }
   },
   {
@@ -181,15 +167,10 @@ local plugins = {
   },
 
   -- Visual
-  { 'chrisbra/unicode.vim' },
   { 'junegunn/vim-peekaboo' },
   {
     'kshenoy/vim-signature',
     config = function() require('mortepau.plugins.signature') end
-  },
-  {
-    'tweekmonster/braceless.vim',
-    config = function() require('mortepau.plugins.braceless') end
   },
   {
     'tjdevries/overlength.vim',
@@ -198,7 +179,6 @@ local plugins = {
   { 'markonm/traces.vim' },
   {
     'lukas-reineke/indent-blankline.nvim',
-    branch = 'lua',
     config = function() require('mortepau.plugins.indent_blankline') end
   },
   {
@@ -216,7 +196,10 @@ local plugins = {
   -- TODO (mortepau): moaqa/dial.nvim <C-a> and <C-x> enhancements
 
   -- Documentation
-  { 'nanotee/luv-vimdocs' },
+  {
+    'nanotee/luv-vimdocs',
+    disable = at_work
+  },
 
   -- Git
   {
@@ -258,9 +241,18 @@ local plugins = {
   -- Filetype specific
 
   -- Lua
-  { 'tjdevries/manillua.nvim' },
-  { 'euclidianAce/BetterLua.vim' },
-  { 'folke/lua-dev.nvim' },
+  {
+    'tjdevries/manillua.nvim',
+    disable = at_work
+  },
+  {
+    'euclidianAce/BetterLua.vim',
+    disable = at_work
+  },
+  {
+    'folke/lua-dev.nvim',
+    disable = at_work
+  },
 
   -- Markdown
   {
@@ -297,7 +289,10 @@ local plugins = {
   },
 
   -- Elixir
-  { 'elixir-editors/vim-elixir' },
+  {
+    'elixir-editors/vim-elixir',
+    disable = at_work
+  },
 
   -- MATLAB
   -- TODO (mortepau): Create plugin for MATLAB not dependent on Python2
@@ -305,19 +300,18 @@ local plugins = {
 
   -- Colorschemes
   {
-    'morhetz/gruvbox',
-    opt = true,
-    config = function() require('mortepau.plugins.gruvbox') end
-  },
-  {
     'lifepillar/vim-gruvbox8',
     opt = true,
     config = function() require('mortepau.plugins.gruvbox8') end
   },
   { 'jsit/toast.vim', opt = true },
-  { 'cocopon/iceberg.vim', opt = true },
-  { 'bluz71/vim-moonfly-colors', opt = true },
-  { 'bluz71/vim-nightfly-guicolors', opt = true },
+  { 'marko-cerovac/material.nvim', opt = true },
+  {
+    'olimorris/onedark.nvim',
+    requires = { 'rktjmp/lush.nvim' },
+    config = function() vim.g.colors_name = 'onedark_nvim' end,
+    opt = true
+  }
 }
 
 mortepau.plugins = mortepau.plugins or plugins

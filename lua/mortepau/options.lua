@@ -109,9 +109,18 @@ vim.opt.splitright = true
 -- bsdir = 'current'
 
 -- Grep
--- TODO: Should be set based on what provider we have
--- grepprg = provider.tools.grepper.prog('', nil, '')
--- grepformat = '%f:%l:%c:%m',
+-- :grep <query> <directory/file>
+if vim.fn.executable('rg') == 1 then
+  vim.opt.grepprg = 'rg --smart-case --hidden --line-buffered --vimgrep $*'
+  vim.opt.grepformat = '%f:%l:%c:%m'
+elseif vim.fn.executable('ripgrep') == 1 then
+  vim.opt.grepprg = 'ripgrep --smart-case --hidden --line-buffered --vimgrep $*'
+  vim.opt.grepformat = '%f:%l:%c:%m'
+elseif vim.fn.executable('ag') == 1 then
+  vim.opt.grepprg = 'ag --vimgrep'
+  -- TODO: Fix grepformat for ag, currently using ripgrep's
+  vim.opt.grepformat = '%f:%l:%c:%m'
+end
 
 -- Column
 vim.opt.signcolumn = 'yes:2'

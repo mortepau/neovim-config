@@ -46,3 +46,12 @@ mortepau.editor.completion_prev = function()
   end
 end
 
+mortepau.editor.snippet_choice = function()
+  local t = mortepau.editor.replace_termcodes
+  if mortepau.plugin_func.snippet_choice_available() then
+    return t(mortepau.plugin_func.snippet_choice_next())
+  else
+    return t('<C-l>')
+  end
+end
+

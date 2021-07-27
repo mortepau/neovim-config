@@ -14,7 +14,58 @@ local MODE = {
   TERMINAL               = 't',
 }
 
+mortepau.mappings = mortepau.mappings or {}
+
+local id = 0
+local function next_id()
+  id = id + 1
+  return id
+end
+
+local function function_to_id(mode, rhs)
+  local mapid = next_id()
+  local prefix
+  if mode == 'i' then
+    prefix = '<cmd>'
+  elseif mode == 'v' then
+    prefix = ':<C-u>'
+  else
+    prefix = ':'
+  end
+
+  if type(rhs) == 'table' then
+    local func = rhs[1]
+    table.remove(rhs, 1)
+    local params = rhs
+    mortepau.mappings[mapid] = { func, params }
+  else
+    mortepau.mappings[mapid] = { rhs, {} }
+  end
+
+  return string.format(
+    '%slua mortepau.execute_mapping(%d)<CR>',
+    prefix,
+    mapid
+  )
+end
+
+function mortepau.execute_mapping(mapid)
+  if not mortepau.mappings[mapid] then
+    vim.notify('Mapping: An error occured (id: ' .. tostring(mapid) .. ')')
+    return
+  end
+
+  local rhs = vim.deepcopy(mortepau.mappings[mapid])
+  local func, params = unpack(rhs)
+  P(params)
+
+  func(unpack(params))
+end
+
 local function _map(mode, lhs, rhs, opts)
+  if type(rhs) == 'function' or type(rhs) == 'table' then
+    rhs = function_to_id(mode, rhs)
+  end
   if opts.buffer then
     local buffer = opts.buffer
     opts.buffer = nil
