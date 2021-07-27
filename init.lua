@@ -1,6 +1,7 @@
 -- Entry point for the Neovim configuration files
 
 _G.mortepau = _G.mortepau or {}
+_G.mortepau.user = vim.env.USER == 'mortepau' and 'mortepau' or 'mopa'
 
 -- Set the mapleader early on, so that later configurations use it
 vim.g.mapleader = ','
