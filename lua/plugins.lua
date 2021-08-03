@@ -23,6 +23,11 @@ local plugins = {
     config = function() require('mortepau.plugins.todo') end
   },
   {
+    dir_or_git('fold.nvim'),
+    keys = { { 'n', 'zz' } },
+    config = function() require('mortepau.plugins.fold') end,
+  },
+  {
     dir_or_git('vim-phoenix'),
     disable = at_work,
     config = function() require('mortepau.plugins.phoenix') end
@@ -71,14 +76,6 @@ local plugins = {
       -- 'nvim-treesitter/nvim-tree-docs',
     },
     config = function() require('mortepau.plugins.treesitter') end,
-  },
-
-  -- Searching
-  -- TODO (mortepau): Create something simple yourself to reduce dependencies
-  {
-    'tjdevries/fold_search.vim',
-    requires = { 'tjdevries/standard.vim', 'tjdevries/conf.vim' },
-    keys = { { 'n', 'zz' } }
   },
 
   -- Project
@@ -173,11 +170,6 @@ local plugins = {
     config = function() require('mortepau.plugins.signature') end
   },
   {
-    'tjdevries/overlength.vim',
-    config = function() require('mortepau.plugins.overlength') end
-  },
-  { 'markonm/traces.vim' },
-  {
     'lukas-reineke/indent-blankline.nvim',
     config = function() require('mortepau.plugins.indent_blankline') end
   },
@@ -233,9 +225,18 @@ local plugins = {
       'NvimTreeRefresh',
       'NvimTreeFindFile'
     },
-    keys = { { 'n', '<leader>ft' } },
+    -- keys = { { 'n', '<leader>ft' } },
     requires = { 'kyazdani42/nvim-web-devicons' },
     config = function() require('mortepau.plugins.nvim_tree') end
+  },
+  {
+    'tamago324/lir.nvim',
+    requires = {
+      'nvim_lua/plenary.nvim',
+      'kyazdani42/nvim-web-devicons',
+    },
+    keys = { { 'n', '<leader>ft' }, { 'n', '<leader>fT' } },
+    config = function() require('mortepau.plugins.lir') end,
   },
 
   -- Filetype specific
@@ -278,7 +279,7 @@ local plugins = {
     config = function() require('mortepau.plugins.verilog_systemverilog') end
   },
 
-  -- LaTex
+  -- LaTeX
   {
     'lervag/vimtex',
     requires = {
@@ -304,13 +305,29 @@ local plugins = {
     opt = true,
     config = function() require('mortepau.plugins.gruvbox8') end
   },
-  { 'jsit/toast.vim', opt = true },
-  { 'marko-cerovac/material.nvim', opt = true },
+  {
+    'jsit/toast.vim',
+    opt = true,
+    config = function()
+      if mortepau.colorscheme == 'toast' then
+        vim.cmd('colorscheme toast')
+      end
+    end
+  },
+  {
+    'mortepau/tokyonight.nvim',
+    config = function()
+      require('mortepau.plugins.tokyonight')
+    end,
+  },
   {
     'olimorris/onedark.nvim',
     requires = { 'rktjmp/lush.nvim' },
-    config = function() vim.g.colors_name = 'onedark_nvim' end,
-    opt = true
+    config = function()
+      if mortepau.colorscheme == 'onedark_nvim' then
+        vim.g.colors_name = 'onedark_nvim'
+      end
+    end,
   }
 }
 

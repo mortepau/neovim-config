@@ -57,7 +57,6 @@ function mortepau.execute_mapping(mapid)
 
   local rhs = vim.deepcopy(mortepau.mappings[mapid])
   local func, params = unpack(rhs)
-  P(params)
 
   func(unpack(params))
 end

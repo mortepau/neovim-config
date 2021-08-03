@@ -2,6 +2,7 @@ local languages = {
   'bash',
   'bibtex',
   'c',
+  'comment',
   'cpp',
   'css',
   'elixir',

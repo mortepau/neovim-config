@@ -1,4 +1,4 @@
-vim.nnoremap('<leader>ft', '<cmd>lua require("nvim-tree").toggle()<CR>')
+-- vim.nnoremap('<leader>ft', '<cmd>lua require("nvim-tree").toggle()<CR>')
 
 vim.g.nvim_tree_quit_on_open = true
 

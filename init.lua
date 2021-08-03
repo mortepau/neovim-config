@@ -8,16 +8,6 @@ _G.mortepau.at_home = vim.env.AT_HOME ~= nil
 
 -- Set the mapleader early on, so that later configurations use it
 vim.g.mapleader = ','
-
-local colorscheme = 'toast'
-
-local ok, color = pcall(require, colorscheme)
-if ok then
-  color.set()
-else
-  pcall(vim.cmd, 'colorscheme ' .. colorscheme)
-end
-
 -- Disable some builtin plugins
 local plugins = {
   ['matchit']    = false,
@@ -55,6 +45,21 @@ end
 
 -- Load my personal configuration
 require('mortepau')
+
+mortepau.colorscheme = 'tokyonight'
+
+-- TODO: Move this to a better place
+local patterns = {
+  'TODO',
+  'NOTE',
+  'FIXME',
+  'FIX',
+  'HACK',
+  'XXX',
+  'WARNING',
+  'BUG',
+}
+vim.cmd('command! -nargs=0 QFTodo vimgrep! /\\C' .. table.concat(patterns, '\\|') .. '/j ./**')
 
 -- TODO: Check out sessions, views
 -- TODO: Check out include and includeexpr

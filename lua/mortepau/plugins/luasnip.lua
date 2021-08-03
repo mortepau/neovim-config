@@ -80,6 +80,7 @@ ls.snippets = {
     comment_string('xxx', 'XXX'),
     comment_string('opt', 'OPTIMIZE'),
     comment_string('hack', 'HACK'),
+    comment_string('help', 'HELP'),
     s('date', {
       c(1, {
         f(function() return os.date('%d-%m-%Y') end, {}),

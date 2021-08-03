@@ -46,7 +46,7 @@ vim.opt.foldlevelstart = 99
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.incsearch = true
-vim.opt.hlsearch = false
+vim.opt.hlsearch = true
 vim.opt.magic = true
 vim.opt.inccommand = 'nosplit'
 -- TODO: Set path
