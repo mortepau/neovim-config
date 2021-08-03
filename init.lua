@@ -59,7 +59,7 @@ local patterns = {
   'WARNING',
   'BUG',
 }
-vim.cmd('command! -nargs=0 QFTodo vimgrep! /\\C' .. table.concat(patterns, '\\|') .. '/j ./**')
+vim.cmd('command! -nargs=0 QFTodo silent! vimgrep /\\C' .. table.concat(patterns, '\\|') .. '/j ./**')
 
 -- TODO: Check out sessions, views
 -- TODO: Check out include and includeexpr

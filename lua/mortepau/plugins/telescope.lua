@@ -1,7 +1,24 @@
+local builtins = require("telescope.builtin")
+local theme = require("telescope.themes")
+local ivy = theme.get_ivy()
+
 local prefix = '<leader>f'
 
-function mortepau.plugin_func.edit_config()
-  require('telescope.builtin').find_files({
+local function live_grep()
+  builtins.live_grep({ layout_strategy = 'vertical' })
+end
+local function find_files()
+  builtins.find_files(theme.get_ivy({ hidden = false }))
+end
+local function git_files()
+  builtins.git_files(theme.get_ivy())
+end
+local function buffers()
+  builtins.buffers(theme.get_dropdown({ previewer = false }))
+end
+
+local function dotfiles()
+  builtins.find_files({
     prompt_title = '~ Dotfiles ~',
     shorten_path = false,
     cwd = '~/.config/nvim',
@@ -13,18 +30,63 @@ function mortepau.plugin_func.edit_config()
   })
 end
 
-vim.nnoremap(prefix .. 's', '<cmd>Telescope live_grep<Cr>')
-vim.nnoremap(prefix .. 'f', '<cmd>Telescope find_files<Cr>')
-vim.nnoremap(prefix .. 'F', '<cmd>Telescope git_files<Cr>')
-vim.nnoremap(prefix .. 'b', '<cmd>Telescope buffers<Cr>')
-vim.nnoremap(prefix .. 'm', '<cmd>Telescope marks<Cr>')
-vim.nnoremap(prefix .. 'q', '<cmd>Telescope quickfix<Cr>')
-vim.nnoremap(prefix .. 'l', '<cmd>Telescope loclist<Cr>')
-vim.nnoremap(prefix .. 'h', '<cmd>Telescope help_tags<Cr>')
-vim.nnoremap(prefix .. 'H', '<cmd>Telescope highlights<Cr>')
-vim.nnoremap(prefix .. 'k', '<cmd>Telescope keymaps<Cr>')
-vim.nnoremap(prefix .. 'gC', '<cmd>Telescope git_commits<Cr>')
-vim.nnoremap(prefix .. 'gc', '<cmd>Telescope git_bcommits<Cr>')
-vim.nnoremap(prefix .. 'gs', '<cmd>Telescope git_status<Cr>')
-vim.nnoremap(prefix .. 'gb', '<cmd>Telescope git_branches<Cr>')
-vim.nnoremap(prefix .. 'c', '<cmd>lua mortepau.plugin_func.edit_config()<Cr>')
+local function git_commits() builtins.git_commits(ivy) end
+local function git_bcommits() builtins.git_bcommits(ivy) end
+local function git_status()
+  builtins.git_status({
+    theme = 'vertical',
+    layout_config = {
+      preview_width = 0.6,
+    }
+  })
+end
+local function git_branches()
+  builtins.git_branches(theme.get_dropdown({ previewer = false }))
+end
+local function git_stash()
+  builtins.git_stash(theme.get_dropdown({ previewer = false }))
+end
+
+local function marks()
+  builtins.marks(theme.get_ivy())
+end
+
+local function registers()
+  builtins.registers(theme.get_ivy())
+end
+
+local function quickfix()
+  builtins.quickfix({
+    layout_strategy = 'vertical',
+    layout_config = {
+      width = 0.7
+    }
+  })
+end
+
+local function loclist()
+  builtins.loclist({
+    layout_strategy = 'vertical',
+    layout_config = {
+      width = 0.7
+    }
+  })
+end
+
+local silent = { silent = true }
+vim.nnoremap(prefix .. 's', live_grep, silent)
+vim.nnoremap(prefix .. 'f', find_files, silent)
+vim.nnoremap(prefix .. 'F', git_files, silent)
+vim.nnoremap(prefix .. 'b', buffers, silent)
+vim.nnoremap(prefix .. 'c', dotfiles, silent)
+
+vim.nnoremap(prefix .. 'gC', git_commits, silent)
+vim.nnoremap(prefix .. 'gc', git_bcommits, silent)
+vim.nnoremap(prefix .. 'gs', git_status, silent)
+vim.nnoremap(prefix .. 'gS', git_stash, silent)
+vim.nnoremap(prefix .. 'gb', git_branches, silent)
+
+vim.nnoremap(prefix .. 'm', marks, silent)
+vim.nnoremap(prefix .. 'f', registers, silent)
+vim.nnoremap(prefix .. 'q', quickfix, silent)
+vim.nnoremap(prefix .. 'l', loclist, silent)
