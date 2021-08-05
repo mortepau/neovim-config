@@ -1,4 +1,6 @@
-local saga = require('lspsaga')
+-- TODO(mortepau): Get rid of lsp-saga, too much bloat
+local lazy = require('mortepau.lazy_require')
+local saga = lazy.require_deep_call('lspsaga')
 saga.init_lsp_saga({
   code_action_keys = {
     quit = { 'q', '<Esc>', '<C-e>', '<C-c>' },

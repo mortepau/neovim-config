@@ -1,6 +1,6 @@
-local builtins = require("telescope.builtin")
-local theme = require("telescope.themes")
-local ivy = theme.get_ivy()
+local lazy = require('mortepau.lazy_require')
+local builtins = lazy.require("telescope.builtin")
+local theme = lazy.require("telescope.themes")
 
 local prefix = '<leader>f'
 
@@ -30,8 +30,8 @@ local function dotfiles()
   })
 end
 
-local function git_commits() builtins.git_commits(ivy) end
-local function git_bcommits() builtins.git_bcommits(ivy) end
+local function git_commits() builtins.git_commits(theme.get_ivy()) end
+local function git_bcommits() builtins.git_bcommits(theme.get_ivy()) end
 local function git_status()
   builtins.git_status({
     theme = 'vertical',
@@ -87,6 +87,6 @@ vim.nnoremap(prefix .. 'gS', git_stash, silent)
 vim.nnoremap(prefix .. 'gb', git_branches, silent)
 
 vim.nnoremap(prefix .. 'm', marks, silent)
-vim.nnoremap(prefix .. 'f', registers, silent)
+vim.nnoremap(prefix .. 'r', registers, silent)
 vim.nnoremap(prefix .. 'q', quickfix, silent)
 vim.nnoremap(prefix .. 'l', loclist, silent)

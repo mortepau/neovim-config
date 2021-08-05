@@ -1,15 +1,13 @@
-local ok, lir = pcall(require, 'lir')
-if not ok then
-  return
-end
+local lazy = require('mortepau.lazy_require')
 
-local actions = require('lir.actions')
-local mark_actions = require('lir.mark.actions')
-local clipboard_actions = require('lir.clipboard.actions')
-local lir_utils = require('lir.utils')
-local lir_config = require('lir.config')
+local lir = lazy.require('lir')
+local actions = lazy.require('lir.actions')
+local mark_actions = lazy.require('lir.mark.actions')
+local clipboard_actions = lazy.require('lir.clipboard.actions')
+local lir_utils = lazy.require('lir.utils')
+local lir_config = lazy.require('lir.config')
 
-local Path = require('plenary.path')
+local Path = lazy.require('plenary.path')
 
 -- Move to the git root
 local function goto_git_root()
@@ -144,5 +142,4 @@ lir.setup({
   }
 })
 
-vim.nnoremap('<leader>ft', function() vim.cmd('edit .') end)
-vim.nnoremap('<leader>fT', function() vim.cmd('topleft 50vsplit .') end)
+vim.nnoremap('<leader>ft', function() vim.cmd('edit .') end, { silent = true })

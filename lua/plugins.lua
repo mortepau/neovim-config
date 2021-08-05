@@ -35,6 +35,7 @@ local plugins = {
   {
     dir_or_git('codicons.nvim'),
     disable = at_work,
+    opt = true,
     config = function() require('mortepau.plugins.codicons') end,
   },
   {
@@ -84,11 +85,6 @@ local plugins = {
   { 'tpope/vim-projectionist' },
   -- NOTE: Perhaps use treesitter-docs instead of vim-doge
   {
-    'kkoomen/vim-doge',
-    run = ':call doge#install()',
-    cmd = { 'DogeGenerate' }
-  },
-  {
     'janko/vim-test',
     requires = {
       'tpope/vim-dispatch',
@@ -116,18 +112,7 @@ local plugins = {
     keys = { { 'n', 'ga' }, { 'x', 'ga' } },
     config = function() require('mortepau.plugins.easy_align') end
   },
-  {
-    'tpope/vim-commentary',
-    cmd = { 'Commentary' },
-    keys = {
-      { 'n', 'gc' },
-      { 'x', 'gc' },
-      { 'o', 'gc' },
-      { 'n', 'gcc' },
-      { 'n', 'cgc' },
-      { 'n', 'cgu' },
-    }
-  },
+  { 'tpope/vim-commentary' },
   {
     'tpope/vim-repeat',
     keys = { { 'n', '.' } }
@@ -153,10 +138,6 @@ local plugins = {
       { 'i', '<C-G>s' },
       { 'i', '<C-G>S' }
     }
-  },
-  {
-    'unblevable/quick-scope',
-    config = function() require('mortepau.plugins.quick_scope') end
   },
   {
     'wellle/targets.vim',
@@ -235,7 +216,6 @@ local plugins = {
       'nvim_lua/plenary.nvim',
       'kyazdani42/nvim-web-devicons',
     },
-    keys = { { 'n', '<leader>ft' }, { 'n', '<leader>fT' } },
     config = function() require('mortepau.plugins.lir') end,
   },
 
