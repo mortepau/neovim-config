@@ -156,6 +156,7 @@ local plugins = {
   },
   {
     'norcalli/nvim-colorizer.lua',
+    cmd = { 'ColorizerAttachToBuffer' },
     config = function() require('mortepau.plugins.colorizer') end
   },
   {
@@ -177,6 +178,8 @@ local plugins = {
   -- Git
   {
     'tpope/vim-fugitive',
+    cmd = { 'Git' },
+    keys = { { 'n' , '<leader>G' } },
     requires = { 'tpope/vim-rhubarb' },
     config = function() require('mortepau.plugins.fugitive') end
   },
@@ -262,8 +265,10 @@ local plugins = {
   -- LaTeX
   {
     'lervag/vimtex',
+    ft = { 'tex', 'latex' },
     requires = {
       'KeitaNakamura/tex-conceal.vim',
+      ft = { 'tex', 'latex' },
       config = function() require('mortepau.plugins.tex_conceal') end
     },
     config = function() require('mortepau.plugins.vimtex') end
@@ -302,7 +307,7 @@ local plugins = {
   },
   {
     'olimorris/onedark.nvim',
-    requires = { 'rktjmp/lush.nvim' },
+    requires = { 'rktjmp/lush.nvim', opt = true },
     config = function()
       if mortepau.colorscheme == 'onedark_nvim' then
         vim.g.colors_name = 'onedark_nvim'
@@ -311,5 +316,7 @@ local plugins = {
   }
 }
 
-mortepau.plugins = mortepau.plugins or plugins
-mortepau.plugin_func = mortepau.plugin_func or {}
+return plugins
+
+-- mortepau.plugins = mortepau.plugins or plugins
+-- mortepau.plugin_func = mortepau.plugin_func or {}

@@ -1,9 +1,3 @@
--- Use relative numbers when inside buffer and not in insert mode
--- vim.augroup('NumberToggle', {
---   { {'BufEnter', 'FocusGained', 'InsertLeave'}, '*', 'if &filetype !=# "help" | set relativenumber | endif' },
---   { {'BufLeave', 'FocusLost', 'InsertEnter'}, '*', 'if &filetype !=# "help" | set norelativenumber | endif' },
--- })
-
 -- Use cursorline when not in insert mode
 vim.augroup('CursorLineToggle', {
   { 'InsertEnter', '*', 'set nocursorline' },
@@ -32,5 +26,5 @@ vim.augroup('ConfigureBuftype', {
 })
 
 vim.augroup('AutoCompile', {
-  { 'BufWritePost', '~/.config/nvim/lua/plugins.lua', 'PackerCompile' }
+  { 'BufWritePost', 'plugins.lua', 'source <afile> | PackerCompile' }
 })

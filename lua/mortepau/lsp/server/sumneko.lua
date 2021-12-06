@@ -31,7 +31,7 @@ config.settings = {
     },
     diagnostics = {
       enable = true,
-      globals = { 'vim', 'hs', 'it', 'describe', 'before_each', 'after_each', 'P', 'R', 'Reload', 'mortepau' },
+      globals = { 'vim', 'nvim', 'hs', 'it', 'describe', 'before_each', 'after_each', 'P', 'R', 'Reload', 'mortepau' },
     },
     workspace = {
       library = {

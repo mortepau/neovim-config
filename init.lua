@@ -1,30 +1,32 @@
 -- Entry point for the Neovim configuration files
 
 -- Create a global table holding my custom functionality
-_G.mortepau = _G.mortepau or {}
-_G.mortepau.user = vim.env.USER == 'mortepau' and 'mortepau' or 'mopa'
-_G.mortepau.git_username = 'mortepau'
-_G.mortepau.at_home = vim.env.AT_HOME ~= nil
+_G.mortepau = _G.mortepau or {
+  user = vim.env.USER,
+  git_username = 'mortepau',
+  at_home = vim.env.AT_HOME ~= nil,
+  colorscheme = 'tokyonight',
+  plugin_func = {},
+}
 
 -- Set the mapleader early on, so that later configurations use it
 vim.g.mapleader = ','
--- Disable some builtin plugins
-local plugins = {
-  ['matchit']    = false,
-  ['matchparen'] = false,
-  ['gzip']       = true,
-  ['netrw']      = true,
-  ['tarPlugin']  = true,
-  ['tar']        = true,
-  ['zipPlugin']  = true,
-  ['zip']        = true,
-}
 
-for name, disable in pairs(plugins) do
-  if disable then
-    vim.g['loaded_' .. name] = 1
-  end
+-- Bootstrap the package manager
+local install_path = vim.fn.stdpath('data') .. '/site/pack/packer/opt/packer.nvim'
+if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
+  vim.fn.system({'git', 'clone', 'https://github.com/wbthomason/packer.nvim', install_path})
+  vim.cmd('packadd packer.nvim')
 end
+
+-- Disable some builtin plugins
+-- Currently not disabled: matchit, matchparen
+vim.g.loaded_gzip      = true
+vim.g.loaded_netrw     = true
+vim.g.loaded_tarPlugin = true
+vim.g.loaded_tar       = true
+vim.g.loaded_zipPlugin = true
+vim.g.loaded_zip       = true
 
 -- Disable or enable remote-plugins
 local remotes = {
@@ -49,20 +51,9 @@ require('mortepau')
 mortepau.colorscheme = 'tokyonight'
 
 -- TODO: Move this to a better place
-local patterns = {
-  'TODO',
-  'NOTE',
-  'FIXME',
-  'FIX',
-  'HACK',
-  'XXX',
-  'WARNING',
-  'BUG',
-}
+local patterns = { 'TODO', 'NOTE', 'FIXME', 'FIX', 'HACK', 'XXX', 'WARN', 'BUG' }
 vim.cmd('command! -nargs=0 QFTodo silent! vimgrep /\\C' .. table.concat(patterns, '\\|') .. '/j ./**')
 
 -- TODO: Check out sessions, views
 -- TODO: Check out include and includeexpr
--- TODO: Check out formatexpr and formatoptions
 -- TODO: Check out makeprg
--- TODO: vim-dirvish justinmk

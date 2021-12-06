@@ -160,7 +160,7 @@ vim.opt.spellfile = vim.fn.stdpath('data') .. ps .. 'spell' .. ps .. 'utf-8.add'
 
 -- Formatting
 -- Fix this, need to actually not use 'o'
-vim.opt.formatoptions = vim.opt.formatoptions + 'r2l'
+vim.opt.formatoptions = vim.opt.formatoptions + 'r2l' - 'o'
 
 -- Formatting (indent)
 vim.opt.shiftwidth = 4
