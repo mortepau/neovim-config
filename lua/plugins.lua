@@ -1,13 +1,13 @@
 local ps = jit.os == 'Windows' and '\\' or '/'
 local plugin_dir = vim.fn.expand('$HOME') .. ps .. 'plugins'
-local at_work = not mortepau.at_home
+local at_work = not user.at_home
 
 local function dir_or_git(name)
   local dir = plugin_dir .. ps .. name
   if vim.fn.isdirectory(dir) == 1 then
     return dir
   end
-  return mortepau.git_username .. '/' .. name
+  return user.git_username .. '/' .. name
 end
 
 local plugins = {
@@ -20,52 +20,156 @@ local plugins = {
   -- Personal plugins
   {
     dir_or_git('vim-todo'),
-    config = function() require('mortepau.plugins.todo') end
+    config = function()
+      vim.g.todo_enable_partial_completion = false
+    end
   },
   {
     dir_or_git('fold.nvim'),
     keys = { { 'n', 'zz' } },
-    config = function() require('mortepau.plugins.fold') end,
+    config = function()
+      require('fold').setup({
+        context = 7,
+        tail = 150,
+      })
+    end,
   },
   {
     dir_or_git('vim-phoenix'),
     disable = at_work,
-    config = function() require('mortepau.plugins.phoenix') end
+    ft = { 'elixir', 'eelixir' },
+    opt = true,
+    config = function() end,
   },
   {
     dir_or_git('codicons.nvim'),
     disable = at_work,
     opt = true,
-    config = function() require('mortepau.plugins.codicons') end,
+    config = function()
+      require('codicons').setup({
+        ['file-code'] = 60155,
+      })
+    end,
   },
   {
     dir_or_git('terminal.nvim'),
-    config = function() require('mortepau.plugins.terminal') end,
+    config = function()
+      require('terminal').setup({
+        debug_level = 'error',
+        terminals = {
+          {
+            name = 'python',
+            cmd = 'python',
+            position = 'current',
+          },
+          {
+            name = 'matlab',
+            cmd = 'matlab -nodesktop -nosplash',
+            position = 'right',
+          },
+        }
+      })
+    end,
   },
 
   -- LSP
   { 'neovim/nvim-lspconfig' },
-  -- TODO: Try to remove lspsaga as I use barely anything from it
-  {
-    'glepnir/lspsaga.nvim',
-    config = function() require('mortepau.plugins.lspsaga') end
-  },
-  -- { 'tjdevries/nlua.nvim' },
+  -- TODO(mopa): Find a subsitute for lspsaga
 
   -- DAP
   {
     'mfussenegger/nvim-dap',
-    config = function() require('mortepau.plugins.dap') end
+    config = function() end,
   },
 
   -- Autocompletion
   {
-    'hrsh7th/nvim-compe',
-    config = function() require('mortepau.plugins.nvim_compe') end
-  },
-  {
-    'L3MON4D3/LuaSnip',
-    config = function() require('mortepau.plugins.luasnip') end,
+    'hrsh7th/nvim-cmp',
+    requires = {
+      'hrsh7th/cmp-nvim-lsp',
+      'hrsh7th/cmp-buffer',
+      'hrsh7th/cmp-path',
+      'hrsh7th/cmp-cmdline',
+      'saadparwaiz1/cmp_luasnip',
+      {
+        'L3MON4D3/LuaSnip',
+        config = function() require('user.plugins.luasnip') end,
+      },
+    },
+    config = function()
+      local cmp = require('cmp')
+      local luasnip = require('luasnip')
+
+      local has_words_before = function()
+        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line-1, line, true)[1]:sub(col, col):match("%s") == nil
+      end
+
+      cmp.setup({
+        snippet = {
+          expand = function(args)
+            require('luasnip').lsp_expand(args.body)
+          end
+        },
+        mapping = {
+          ['<C-b>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), {'i', 'c'}),
+          ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), {'i', 'c'}),
+          ['<C-e>'] = cmp.mapping({
+            i = cmp.mapping.abort(),
+            c = cmp.mapping.close(),
+          }),
+          ['<C-y>'] = cmp.mapping(
+            cmp.mapping.confirm({
+              behavior = cmp.ConfirmBehavior.Insert,
+              select = true
+            }),
+            { 'i', 'c' }
+          ),
+          ['<C-Space>'] = cmp.mapping({
+            i = cmp.mapping.complete(),
+            c = function(fallback)
+              if cmp.visible() then
+                if not cmp.confirm({ select = true }) then
+                  return
+                end
+              else
+                cmp.complete()
+              end
+            end,
+          }),
+          ['<C-n>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+            elseif luasnip.expand_or_jumpable() then
+              luasnip.expand_or_jump()
+            elseif has_words_before() then
+              cmp.complete()
+            else
+              fallback()
+            end
+          end, {'i' , 's'}),
+          ['<C-p>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+            elseif luasnip.jumpable(-1) then
+              luasnip.jump(-1)
+            else
+              fallback()
+            end
+          end, {'i' , 's'}),
+          ['<CR>'] = cmp.config.disable,
+          ['<Tab>'] = cmp.config.disable,
+          ['<S-Tab>'] = cmp.config.disable,
+        },
+        sources = cmp.config.sources({
+          { name = 'nvim_lsp' },
+          { name = 'luasnip' },
+        },
+        {
+          { name = 'buffer' },
+        })
+      })
+    end
   },
 
   -- Treesitter
@@ -76,7 +180,8 @@ local plugins = {
       'nvim-treesitter/playground',
       -- 'nvim-treesitter/nvim-tree-docs',
     },
-    config = function() require('mortepau.plugins.treesitter') end,
+    run = ':TsUpdate',
+    config = function() require('user.plugins.treesitter') end,
   },
 
   -- Project
@@ -88,7 +193,11 @@ local plugins = {
     'janko/vim-test',
     requires = {
       'tpope/vim-dispatch',
-      config = function() require('mortepau.plugins.dispatch') end
+      config = function()
+        vim.g.dispatch_compilers = {
+          elixir = 'exunit'
+        }
+      end,
     },
     cmd = {
       'TestNearest',
@@ -97,7 +206,9 @@ local plugins = {
       'TestLast',
       'TestVisit'
     },
-    config = function() require('mortepau.plugins.test') end
+    config = function()
+      vim.g['test#strategy'] = 'dispatch'
+    end
   },
   {
     'rafcamlet/nvim-luapad',
@@ -110,7 +221,10 @@ local plugins = {
   {
     'junegunn/vim-easy-align',
     keys = { { 'n', 'ga' }, { 'x', 'ga' } },
-    config = function() require('mortepau.plugins.easy_align') end
+    config = function()
+      vim.keymap.set('n', 'ga', '<Plug>(EasyAlign)', { remap = true })
+      vim.keymap.set('x', 'ga', '<Plug>(EasyAlign)', { remap = true })
+    end
   },
   { 'tpope/vim-commentary' },
   {
@@ -141,22 +255,43 @@ local plugins = {
   },
   {
     'wellle/targets.vim',
-    config = function() require('mortepau.plugins.targets') end
+    config = function()
+      vim.g.targets_nl = { 'n', 'N' }
+    end
   },
 
   -- Visual
   { 'junegunn/vim-peekaboo' },
   {
     'kshenoy/vim-signature',
-    config = function() require('mortepau.plugins.signature') end
+    config = function()
+      vim.g.SignatureMarkTextHL = 'SignColumn'
+    end
   },
   {
     'lukas-reineke/indent-blankline.nvim',
-    config = function() require('mortepau.plugins.indent_blankline') end
+    config = function()
+      vim.g.indent_blankline_char = '│'
+
+      vim.g.indent_blankline_show_first_indent_level = false
+
+      vim.g.indent_blankline_show_trailing_blankline_indent = false
+
+      vim.g.indent_blankline_filetype_exclude = { }
+      vim.g.indent_blankline_buftype_exclude = { 'terminal', 'nofile' }
+
+      -- Workaround for removing cursorline trail
+      vim.opt.colorcolumn = '9999'
+    end
   },
   {
     'norcalli/nvim-colorizer.lua',
-    config = function() require('mortepau.plugins.colorizer') end
+    cmd = { 'ColorizerAttachToBuffer' },
+    config = function()
+      if vim.o.termguicolors == 1 then
+        require('colorizer').setup()
+      end
+    end
   },
   {
     'christoomey/vim-sort-motion',
@@ -177,13 +312,18 @@ local plugins = {
   -- Git
   {
     'tpope/vim-fugitive',
+    cmd = { 'Git' },
+    keys = { { 'n', '<leader>G' } },
     requires = { 'tpope/vim-rhubarb' },
-    config = function() require('mortepau.plugins.fugitive') end
+    config = function()
+      -- Open the Git status and place it at the top of the viewport
+      vim.nnoremap('<leader>G', ':Git<Cr><C-w>K')
+    end
   },
   {
     'lewis6991/gitsigns.nvim',
     requires = { 'nvim-lua/plenary.nvim' },
-    config = function() require('mortepau.plugins.gitsigns') end
+    config = function() require('user.plugins.gitsigns') end
   },
   {
     'rhysd/git-messenger.vim',
@@ -195,7 +335,7 @@ local plugins = {
   {
     'nvim-lua/telescope.nvim',
     requires = { 'nvim-lua/plenary.nvim', 'nvim-lua/popup.nvim' },
-    config = function() require('mortepau.plugins.telescope') end
+    config = function() require('user.plugins.telescope') end
   },
   {
     'kyazdani42/nvim-tree.lua',
@@ -208,7 +348,9 @@ local plugins = {
     },
     -- keys = { { 'n', '<leader>ft' } },
     requires = { 'kyazdani42/nvim-web-devicons' },
-    config = function() require('mortepau.plugins.nvim_tree') end
+    config = function()
+      vim.g.nvim_tree_quit_on_open = true
+    end
   },
   {
     'tamago324/lir.nvim',
@@ -216,7 +358,7 @@ local plugins = {
       'nvim_lua/plenary.nvim',
       'kyazdani42/nvim-web-devicons',
     },
-    config = function() require('mortepau.plugins.lir') end,
+    config = function() require('user.plugins.lir') end,
   },
 
   -- Filetype specific
@@ -238,35 +380,68 @@ local plugins = {
   -- Markdown
   {
     'plasticboy/vim-markdown',
-    config = function() require('mortepau.plugins.vim_markdown') end
+    config = function()
+      vim.g.vim_markdown_follow_anchor = true
+      vim.g.vim_markdown_auto_instert_bullets = true
+    end
   },
   {
     'iamcco/markdown-preview.nvim',
     cmd = { 'MarkdownPreview' },
     run = ':call mkdp#util#install()',
-    config = function() require('mortepau.plugins.markdown_preview') end
+    config = function()
+      vim.g.mkdp_auto_close = false
+      vim.g.mkdp_refresh_slow = true
+      vim.g.mkdp_browser = jit.os == 'OSX' and 'safari' or 'firefox'
+      -- vim.g.mkdp_markdown_css = '~/.local/lib/node_modules/github-markdown-css/github-markdown-css'
+    end
   },
 
   -- C, C++
   {
     'bfrg/vim-cpp-modern',
-    config = function() require('mortepau.plugins.cpp_modern') end
+    config = function()
+      vim.g.cpp_no_function_highlight = false
+      vim.g.cpp_attributes_highlight = true
+      vim.g.cpp_member_highlight = true
+      vim.g.cpp_simple_highlight = false
+    end
   },
 
   -- Verilog, SystemVerilog
   {
     'vhda/verilog_systemverilog.vim',
-    config = function() require('mortepau.plugins.verilog_systemverilog') end
+    config = function()
+      vim.api.nvim_create_augroup('SystemVerilogBindings', { clear = true })
+      vim.api.nvim_create_autocmd('FileType', {
+        group = 'SystemVerilogBindings',
+        pattern = { 'systemverilog', 'verilog', 'verilog_systemverilog' },
+        callback = function()
+          vim.keymap.set('n', '<leader>i', ':VerilogFollowInstance<Cr>', { buffer = vim.fn.expand('<abuf>'), silent = true })
+          vim.keymap.set('n', '<leader>I', ':VerilogFollowPort<Cr>', { buffer = vim.fn.expand('<abuf>'), silent = true })
+          vim.keymap.set('n', '<leader>u', ':VerilogGotoInstanceStart<Cr>', { buffer = vim.fn.expand('<abuf>'), silent = true })
+        end
+      })
+    end
   },
 
   -- LaTeX
   {
     'lervag/vimtex',
+    ft = { 'tex', 'latex' },
     requires = {
       'KeitaNakamura/tex-conceal.vim',
-      config = function() require('mortepau.plugins.tex_conceal') end
+      ft = { 'tex', 'latex' },
+      config = function()
+        vim.g.tex_conceal = 'abdmg'
+      end
     },
-    config = function() require('mortepau.plugins.vimtex') end
+    config = function()
+      vim.g.vimtex_view_method = 'zathura'
+      vim.g.vimtex_quickfix_mode = false
+      vim.g.vimtex_compiler_progname = 'nvr'
+      vim.g.vimtex_compiler_latexmk = { build_dir = './build' }
+    end
   },
 
   -- Elixir
@@ -283,13 +458,21 @@ local plugins = {
   {
     'lifepillar/vim-gruvbox8',
     opt = true,
-    config = function() require('mortepau.plugins.gruvbox8') end
+    config = function()
+      vim.g.gruvbox_italics = true
+      vim.g.gruvbox_filetype_hi_groups = true
+      vim.g.gruvbox_plugin_hi_groups = true
+
+      if user.colorscheme == 'gruvbox8' then
+        vim.cmd('colorscheme gruvbox8')
+      end
+    end
   },
   {
     'jsit/toast.vim',
     opt = true,
     config = function()
-      if mortepau.colorscheme == 'toast' then
+      if user.colorscheme == 'toast' then
         vim.cmd('colorscheme toast')
       end
     end
@@ -297,19 +480,38 @@ local plugins = {
   {
     'mortepau/tokyonight.nvim',
     config = function()
-      require('mortepau.plugins.tokyonight')
+      local set = function(key, value)
+        vim.g['tokyonight_' .. key] = value
+      end
+
+      set('style', 'night')
+      set('terminal_colors', true)
+      set('italic_comments', true)
+      set('sidebars', {
+        'qf',
+        'packer',
+        'terminal'
+      })
+      set('dark_sidebar', true)
+      set('dark_float', true)
+      set('invert_comment_colors', false)
+      -- TODO: Why does this trigger two messages?
+      -- set('transparent', true)
+
+      if user.colorscheme == 'tokyonight' then
+        vim.cmd('colorscheme tokyonight')
+      end
     end,
   },
   {
     'olimorris/onedark.nvim',
-    requires = { 'rktjmp/lush.nvim' },
+    requires = { 'rktjmp/lush.nvim', opt = true },
     config = function()
-      if mortepau.colorscheme == 'onedark_nvim' then
+      if user.colorscheme == 'onedark_nvim' then
         vim.g.colors_name = 'onedark_nvim'
       end
     end,
   }
 }
 
-mortepau.plugins = mortepau.plugins or plugins
-mortepau.plugin_func = mortepau.plugin_func or {}
+return plugins

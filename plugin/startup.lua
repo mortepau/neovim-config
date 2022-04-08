@@ -9,6 +9,12 @@ local function startuptime()
     end
   end
 
+  -- Get profiling from impatient too
+  local ok, impatient = pcall(require, 'impatient')
+  if ok then
+    impatient.enable_profile()
+  end
+
   if startupfile then
     local file_handle = io.open(startupfile, 'r')
     file_handle:seek('end', -50)

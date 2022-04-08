@@ -3,16 +3,16 @@
 require('mortepau.globals.buftype')
 
 -- Load file functionality
-require('mortepau.globals.file')
+-- require('mortepau.globals.file')
 
 -- Load editor functionality
 require('mortepau.globals.editor')
 
 -- Load quickfix enhancements
-require('mortepau.globals.quickfix')
+-- require('mortepau.globals.quickfix')
 
 -- Load syntax related functionality
-require('mortepau.globals.syntax')
+-- require('mortepau.globals.syntax')
 
 -- Wrapper to vim.inspect any values, returns the inspected values
 P = function(...)

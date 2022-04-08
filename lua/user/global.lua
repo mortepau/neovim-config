@@ -1,23 +1,41 @@
-mortepau.syntax = mortepau.syntax or {}
-
-function mortepau.syntax.stack()
-  if not vim.fn.exists('*synstack') then
-    return
+-- Wrapper to vim.inspect any values, returns the inspected values
+P = function(...)
+  if select('#', ...) > 1 then
+    print(vim.inspect({ ... }))
+  else
+    print(vim.inspect(...))
   end
-
-  -- Treesitter is possibly enabled for the buffer
-  if vim.opt_local.syntax:get() == '' then
-    vim.cmd('TSHighlightCapturesUnderCursor')
-    return
-  end
-
-  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-
-  local synstack = vim.fn.synstack(line, col+1)
-  P(vim.tbl_map(function(v) return vim.fn.synIDattr(v, 'name') end, synstack))
+  return ...
 end
 
-function mortepau.syntax.get_highlight(group)
+function t(term)
+  return vim.api.nvim_replace_termcodes(term, true, true, true)
+end
+
+function Reload(term)
+  for pack in pairs(package.loaded) do
+    if pack:match('^' .. term .. '$') then
+      package.loaded[pack] = nil
+      return require(pack)
+    end
+  end
+end
+
+function ReloadSingle(term)
+  local freed = {}
+  for pack in pairs(package.loaded) do
+    if pack:match(term) then
+      package.loaded[pack] = nil
+      table.insert(freed, pack)
+    end
+  end
+
+  for _, pack in pairs(freed) do
+    require(pack)
+  end
+end
+
+function HighlightGet(group)
   if vim.fn.hlexists(group) == 0 then return {} end
 
   local highlights = { color = {}, attribute = {}}
@@ -52,7 +70,7 @@ function mortepau.syntax.get_highlight(group)
   return highlights
 end
 
-function mortepau.syntax.format_highlight(name, highlight)
+function HighlightFormat(name, highlight)
   local prefix = vim.o.termguicolors == 1 and 'gui' or 'cterm'
   local s = ''
 
@@ -76,16 +94,17 @@ function mortepau.syntax.format_highlight(name, highlight)
   return s
 end
 
-function mortepau.syntax.highlight_whitespace()
-  local group_name = 'HighlightWhitespace'
-  if vim.fn.exists('#' .. group_name) == 1 then
-    print('Highlighting whitespace disabled')
-    vim.augroup(group_name, {})
+function ToggleSpell()
+  if vim.api.nvim_win_get_option(0, 'spell') then
+    vim.opt.spell = false
+    print('Spelling disabled')
   else
-    print('Highlighting whitespace enabled')
-    vim.augroup(group_name, {
-      { 'InsertEnter', '*', 'match ErrorMsg /\\s\\+\\%#\\@<!$/', { buffer = 0 } },
-      { 'InsertLeave', '*', 'match ErrorMsg /\\s\\+$/', { buffer = 0 } },
-    })
+    vim.opt.spell = true
+    vim.opt.spelllang = 'en'
+    print('Spelling enabled, spelllang is set to "en"')
   end
 end
+
+-- Create commands for easier use
+vim.cmd([[command! -nargs=0 ToggleSpell lua ToggleSpell()]])
+vim.cmd([[command! -nargs=1 Reload call luaeval("Reload(_A)", <f-args>)]])
