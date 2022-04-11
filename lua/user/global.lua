@@ -1,5 +1,7 @@
--- Wrapper to vim.inspect any values, returns the inspected values
-P = function(...)
+---Wrapper to vim.inspect any values
+---@vararg any @The variables to inspect
+---@return any @The inspected variables
+function P(...)
   if select('#', ...) > 1 then
     print(vim.inspect({ ... }))
   else
@@ -8,10 +10,16 @@ P = function(...)
   return ...
 end
 
+---Short-hand for replacing terminal codes in `term`
+---@param term string @The term to replace terminal codes in
+---@return string @`term` with the terminal codes replaced
 function t(term)
   return vim.api.nvim_replace_termcodes(term, true, true, true)
 end
 
+---Reloads the package matching `term` and return it
+---@param term string @The package to reload
+---@return any @The content of the package `term`
 function Reload(term)
   for pack in pairs(package.loaded) do
     if pack:match('^' .. term .. '$') then
@@ -21,7 +29,9 @@ function Reload(term)
   end
 end
 
-function ReloadSingle(term)
+---Reloads all packages containing `term`
+---@param term string @The term to match package names to
+function ReloadMultiple(term)
   local freed = {}
   for pack in pairs(package.loaded) do
     if pack:match(term) then
